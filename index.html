@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>چاو تیڤی</title>
+<style>
+:root{--bg:#080A12;--glass:rgba(255,255,255,.10);--line:rgba(255,255,255,.16);--p:#8B5CF6;--glow:#B9A0FF;--t:#F8FAFC;--m:#a9b0c4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#080A12}}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--t);font-family:Tahoma,"Noto Naskh Arabic",system-ui,sans-serif}
+body{min-height:100%;padding-bottom:calc(90px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle at 80% -10%,#3b1f7a 0,transparent 50%),var(--bg)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
+.logo{font-weight:800;font-size:22px;color:var(--glow)}.logo b{color:#fff}
+.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:20px}
+.view{display:none;animation:f .35s}.view.on{display:block}@keyframes f{from{opacity:0;transform:translateY(10px)}}
+.hero{margin:0 16px;height:300px;border-radius:26px;position:relative;overflow:hidden;display:flex;align-items:flex-end;box-shadow:0 10px 40px rgba(139,92,246,.35)}
+.hero .in{padding:16px;width:100%;background:linear-gradient(transparent,rgba(8,10,18,.9))}
+.hero h2{font-size:26px}.hero p{color:var(--m);font-size:13px;margin:4px 0 12px}
+.btn{border:0;border-radius:14px;padding:11px 20px;font:inherit;font-weight:700;color:#fff;background:var(--p);box-shadow:0 0 20px rgba(139,92,246,.6)}
+.btn.g{background:var(--glass);border:1px solid var(--line);box-shadow:none;margin-inline-start:8px}
+h3{margin:22px 16px 10px;font-size:17px}
+.row{display:flex;gap:12px;overflow-x:auto;padding:0 16px 6px;scrollbar-width:none}
+.card{flex:0 0 120px}.poster{height:170px;border-radius:16px;position:relative;display:flex;align-items:flex-end;padding:8px;font-weight:700;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.card small{display:block;color:var(--m);margin-top:6px;font-size:12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 16px}.chip{padding:8px 14px;border-radius:30px;white-space:nowrap;font-size:13px;color:var(--t)}
+.chip.on{background:var(--p);border-color:var(--p)}
+input{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--glass);color:#fff;font:inherit;outline:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 16px}.grid .card{flex:none}
+#nav{position:fixed;inset-inline:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;padding:6px;z-index:5;border-radius:34px;overflow:hidden;
+background:linear-gradient(135deg,rgba(255,255,255,.20),rgba(255,255,255,.06) 55%,rgba(255,255,255,.14));
+backdrop-filter:blur(26px) saturate(190%) brightness(1.08);-webkit-backdrop-filter:blur(26px) saturate(190%) brightness(1.08);
+border:1px solid rgba(255,255,255,.22);
+box-shadow:inset 0 1.5px 1px rgba(255,255,255,.55),inset 0 -1.5px 1px rgba(255,255,255,.12),inset 0 0 24px rgba(255,255,255,.07),0 12px 32px rgba(0,0,0,.5),0 0 0 .5px rgba(255,255,255,.12)}
+#nav::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 90% at 20% -20%,rgba(255,255,255,.35),transparent 55%)}
+#nav .ind{position:absolute;top:6px;bottom:6px;left:0;width:0;border-radius:28px;pointer-events:none;
+background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.08));
+border:1px solid rgba(255,255,255,.28);
+box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -1px 2px rgba(139,92,246,.35),0 4px 16px rgba(139,92,246,.45);
+backdrop-filter:blur(8px) brightness(1.15);-webkit-backdrop-filter:blur(8px) brightness(1.15);
+transition:left .4s cubic-bezier(.3,1.35,.5,1),width .4s cubic-bezier(.3,1.35,.5,1)}
+#nav button{position:relative;z-index:1;flex:1;background:0;border:0;color:rgba(255,255,255,.62);font:inherit;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;transition:color .3s,transform .2s}
+#nav button:active{transform:scale(.9)}
+#nav button span{font-size:20px}#nav button.on{color:#fff;text-shadow:0 0 12px var(--glow)}
+.sheet{position:fixed;inset:0;background:var(--bg);z-index:10;overflow:auto;display:none;padding-bottom:40px}.sheet.on{display:block;animation:f .3s}
+.back{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));inset-inline-start:14px;width:42px;height:42px;border-radius:50%;color:#fff;font-size:20px;z-index:2}
+.cover{height:340px;display:flex;align-items:flex-end}.cover .in{padding:18px;width:100%;background:linear-gradient(transparent,var(--bg))}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;font-size:13px;color:var(--m)}.meta b{color:#ffd166}
+.pad{padding:0 16px}.pad p{line-height:1.9;color:#d5d9e6;font-size:14px}
+.player{margin:16px;height:210px;border-radius:20px;background:#000;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ctl{position:absolute;bottom:0;inset-inline:0;padding:10px 14px;background:linear-gradient(transparent,#000d);font-size:12px}
+.bar{height:4px;background:#fff3;border-radius:4px;margin-bottom:8px}.bar i{display:block;height:100%;width:0;background:var(--p);border-radius:4px}
+.play{width:62px;height:62px;border-radius:50%;font-size:26px;color:#fff;border:1px solid var(--line);background:var(--glass)}
+.item{display:flex;justify-content:space-between;align-items:center;margin:10px 16px;padding:16px;font-size:15px}
+.av{width:84px;height:84px;border-radius:50%;margin:10px auto;background:linear-gradient(135deg,var(--p),#ec4899);display:flex;align-items:center;justify-content:center;font-size:34px}
+.empty{text-align:center;color:var(--m);padding:40px}
+</style>
+</head>
+<body>
+<div class="top"><div class="logo">چاو <b>تیڤی</b></div><button class="glass" id="lang" style="color:#fff;border:0;padding:8px 14px;font:inherit">🔔</button></div>
+
+<div class="view on" id="home">
+  <div class="hero" id="hero"><div class="in"><h2 id="hT"></h2><p id="hP"></p><button class="btn" id="hPlay">▶ تەماشاکردن</button><button class="btn g" id="hFav">＋ لیستەکەم</button></div></div>
+  <h3>بەردەوامبوون لە بینین</h3><div class="row" id="r1"></div>
+  <h3>نوێی ئەم هەفتەیە</h3><div class="row" id="r2"></div>
+  <h3>زۆر بینراوەکان</h3><div class="row" id="r3"></div>
+  <h3>فیلمی کوردی</h3><div class="row" id="r4"></div>
+</div>
+
+<div class="view" id="search">
+  <input id="q" placeholder="🔍 گەڕان بە ناوی فیلم، ئەکتەر، دەرهێنەر...">
+  <div class="chips" id="chips"></div><h3 id="sT">هەموو فیلمەکان</h3><div class="grid" id="grid"></div>
+</div>
+
+<div class="view" id="films"><h3>فیلمەکان</h3><div class="grid" id="all"></div></div>
+<div class="view" id="favs"><h3>دڵخوازەکان ❤️</h3><div class="grid" id="fg"></div></div>
+
+<div class="view" id="prof">
+  <div class="av">🙂</div><p style="text-align:center;font-weight:700">بەکارهێنەری چاو تیڤی</p>
+  <div style="height:14px"></div>
+  <div class="glass item">پڕۆفایلەکان<span>›</span></div>
+  <div class="glass item">مێژووی تەماشاکردن<span>›</span></div>
+  <div class="glass item">پلانی بەشداری (VIP)<span>›</span></div>
+  <div class="glass item">پاراستن بە PIN<span>›</span></div>
+  <div class="glass item">زمان<span>کوردی سۆرانی</span></div>
+</div>
+
+<div class="sheet" id="det">
+  <button class="glass back" id="bk">›</button>
+  <div class="cover" id="cv"><div class="in"><h2 id="dT"></h2><div class="meta" id="dM"></div></div></div>
+  <div class="pad"><button class="btn" id="dPlay">▶ پەخشکردن</button><button class="btn g" id="dFav">♡ دڵخواز</button>
+  <h3 style="margin:20px 0 8px">پوختەی چیرۆک</h3><p id="dD"></p></div>
+  <div class="player" id="pl" style="display:none"><button class="play" id="pp">▶</button>
+    <div class="ctl"><div class="bar"><i id="pg"></i></div>720p · خێرایی ١x · ژێرنووسی کوردی</div></div>
+  <h3>هاوشێوەکان</h3><div class="row" id="sim"></div>
+</div>
+
+<nav id="nav"><i class="ind" id="ind"></i>
+  <button data-v="home" class="on"><span>🏠</span>سەرەکی</button>
+  <button data-v="search"><span>🔍</span>گەڕان</button>
+  <button data-v="films"><span>🎬</span>فیلمەکان</button>
+  <button data-v="favs"><span>❤️</span>دڵخواز</button>
+  <button data-v="prof"><span>👤</span>پڕۆفایل</button>
+</nav>
+
+<script>
+var C=[["#7c3aed","#ec4899"],["#0ea5e9","#6366f1"],["#f97316","#be123c"],["#10b981","#0f766e"],["#eab308","#b45309"],["#d946ef","#4338ca"]];
+var M=[
+["شەوی ئاگر","ئاکشن","٢٠٢٥","١ کاتژمێر و ٥٠ خولەک","٨.٤","کوردی","چیرۆکی گەنجێک کە لە شەوێکدا بۆ پاراستنی گوندەکەی دەکەوێتە ڕێگایەکی مەترسیدارەوە."],
+["ڕێگای کۆن","درامە","٢٠٢٤","٢ کاتژمێر","٧.٩","کوردی","دایکێک بە پیاسەیەکی درێژ بۆ دۆزینەوەی کوڕە ون بووەکەی، ژیانی خۆی دەدۆزێتەوە."],
+["شاری بێدەنگ","ڕاوەستان","٢٠٢٥","١ کاتژمێر و ٤٠ خولەک","٨.١","دۆبلاژکراو","لێکۆڵەرەوەیەک لە شارێکدا کە هەموو خەڵکەکەی بێدەنگن، نهێنییەک دەدۆزێتەوە."],
+["خەونی هەولێر","ڕۆمانسی","٢٠٢٣","١ کاتژمێر و ٥٥ خولەک","٧.٥","کوردی","چیرۆکی خۆشەویستییەکی نێوان دوو هونەرمەند لە شاری هەولێر."],
+["کۆمێدیای شەو","کۆمیدی","٢٠٢٤","١ کاتژمێر و ٣٠ خولەک","٧.٢","کوردی","ئێوارەیەکی پڕ لە پێکەنین کاتێک چەند هاوڕێیەک دەکەونە کێشەیەکی سەیرەوە."],
+["کێوی سوور","ماجەرا","٢٠٢٥","٢ کاتژمێر و ١٠ خولەک","٨.٧","دۆبلاژکراو","گەشتێک بۆ لوتکەی کێوێک کە نهێنییەکی کۆنی تێدایە."]];
+var G=["هەموو","ئاکشن","درامە","ڕاوەستان","ڕۆمانسی","کۆمیدی","ماجەرا"];
+var fav={},cur=0,cat="هەموو";
+var $=function(i){return document.getElementById(i)};
+function bg(i){var c=C[i%6];return"background:linear-gradient(160deg,"+c[0]+","+c[1]+")"}
+function card(i){return'<div class="card" data-i="'+i+'"><div class="poster" style="'+bg(i)+'">'+M[i][0]+'</div><small>★ '+M[i][4]+' · '+M[i][2]+'</small></div>'}
+function fill(id,list){$(id).innerHTML=list.length?list.map(card).join(""):'<div class="empty" style="grid-column:1/-1">هیچ فیلمێک نییە</div>'}
+var ids=M.map(function(_,i){return i});
+function render(){
+ fill("r1",[2,0,3]);fill("r2",[5,0,2,1]);fill("r3",[5,1,0,4]);fill("r4",[0,1,3,4]);fill("all",ids);
+ fill("fg",ids.filter(function(i){return fav[i]}));
+ $("hero").style.cssText=bg(5);$("hT").textContent=M[5][0];$("hP").textContent=M[5][1]+" · "+M[5][2]+" · ★ "+M[5][4];
+ doSearch()}
+function doSearch(){var q=$("q").value.trim();
+ fill("grid",ids.filter(function(i){return(cat=="هەموو"||M[i][1]==cat)&&(!q||M[i][0].indexOf(q)>-1||M[i][1].indexOf(q)>-1)}))}
+$("chips").innerHTML=G.map(function(g){return'<div class="chip glass'+(g==cat?" on":"")+'" data-g="'+g+'">'+g+'</div>'}).join("");
+$("chips").onclick=function(e){var g=e.target.dataset.g;if(!g)return;cat=g;[].forEach.call($("chips").children,function(c){c.classList.toggle("on",c.dataset.g==g)});doSearch()};
+$("q").oninput=doSearch;
+function moveInd(){var b=document.querySelector("#nav button.on"),i=$("ind");if(!b)return;i.style.left=b.offsetLeft+"px";i.style.width=b.offsetWidth+"px"}
+function show(v){[].forEach.call(document.querySelectorAll(".view"),function(x){x.classList.toggle("on",x.id==v)});
+ [].forEach.call($("nav").children,function(b){b.classList.toggle("on",b.dataset.v==v)});scrollTo(0,0);moveInd()}
+$("nav").onclick=function(e){var b=e.target.closest("button");if(b)show(b.dataset.v)};
+function open_(i){cur=i;var m=M[i];$("cv").style.cssText=bg(i);$("dT").textContent=m[0];
+ $("dM").innerHTML="<b>★ "+m[4]+"</b><span>"+m[2]+"</span><span>"+m[3]+"</span><span>"+m[1]+"</span><span>"+m[5]+"</span>";
+ $("dD").textContent=m[6];$("pl").style.display="none";$("pp").textContent="▶";$("pg").style.width="0";
+ $("dFav").textContent=fav[i]?"❤️ لە دڵخوازەکان":"♡ دڵخواز";
+ $("sim").innerHTML=ids.filter(function(x){return x!=i}).slice(0,4).map(card).join("");
+ $("det").classList.add("on");$("det").scrollTop=0}
+document.body.onclick=function(e){var c=e.target.closest(".card");if(c)open_(+c.dataset.i)};
+$("bk").onclick=function(){$("det").classList.remove("on");clearInterval(t)};
+var t;
+function play(){$("pl").style.display="flex";$("pl").scrollIntoView({behavior:"smooth",block:"center"})}
+$("dPlay").onclick=play;$("hPlay").onclick=function(e){e.stopPropagation();open_(5);play()};
+$("pp").onclick=function(){var on=$("pp").textContent=="▶";$("pp").textContent=on?"❚❚":"▶";clearInterval(t);
+ if(on){var w=parseFloat($("pg").style.width)||0;t=setInterval(function(){w=Math.min(100,w+1);$("pg").style.width=w+"%"},300)}};
+function tf(i){fav[i]=!fav[i];try{localStorage.setItem("chawFav",JSON.stringify(fav))}catch(e){}render()}
+$("dFav").onclick=function(){tf(cur);$("dFav").textContent=fav[cur]?"❤️ لە دڵخوازەکان":"♡ دڵخواز"};
+$("hFav").onclick=function(e){e.stopPropagation();tf(5);$("hFav").textContent=fav[5]?"✓ زیادکرا":"＋ لیستەکەم"};
+try{fav=JSON.parse(localStorage.getItem("chawFav"))||{}}catch(e){}
+render();moveInd();window.addEventListener("resize",moveInd);window.addEventListener("load",moveInd);
+</script>
+</body>
+</html>
