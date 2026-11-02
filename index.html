@@ -53,11 +53,14 @@ transition:left .4s cubic-bezier(.3,1.35,.5,1),width .4s cubic-bezier(.3,1.35,.5
 .play{width:62px;height:62px;border-radius:50%;font-size:26px;color:#fff;border:1px solid var(--line);background:var(--glass)}
 .item{display:flex;justify-content:space-between;align-items:center;margin:10px 16px;padding:16px;font-size:15px}
 .av{width:84px;height:84px;border-radius:50%;margin:10px auto;background:linear-gradient(135deg,var(--p),#ec4899);display:flex;align-items:center;justify-content:center;font-size:34px}
+.pimg{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}.item b .pimg{width:40px;height:40px}
+.mini{background:0;border:0;color:#fff;font-size:18px;padding:6px 8px}
+#pe{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px}.eo{font-size:28px;padding:8px;border-radius:16px;border:1px solid transparent}.eo.on{background:var(--glass);border-color:var(--glow)}
 .empty{text-align:center;color:var(--m);padding:40px}
 </style>
 </head>
 <body>
-<div class="top"><div class="logo">چاو <b>تیڤی</b></div><button class="glass" id="lang" style="color:#fff;border:0;padding:8px 14px;font:inherit">🔔</button></div>
+<div class="top"><div class="logo">چاو <b>تیڤی</b></div><button class="glass" id="lang" style="color:#fff;border:0;padding:8px 14px;font:inherit">🌐</button></div>
 
 <div class="view on" id="home">
   <div class="hero" id="hero"><div class="in"><h2 id="hT"></h2><p id="hP"></p><button class="btn" id="hPlay">▶ تەماشاکردن</button><button class="btn g" id="hFav">＋ لیستەکەم</button></div></div>
@@ -76,13 +79,15 @@ transition:left .4s cubic-bezier(.3,1.35,.5,1),width .4s cubic-bezier(.3,1.35,.5
 <div class="view" id="favs"><h3>دڵخوازەکان ❤️</h3><div class="grid" id="fg"></div></div>
 
 <div class="view" id="prof">
-  <div class="av">🙂</div><p style="text-align:center;font-weight:700">بەکارهێنەری چاو تیڤی</p>
+  <div class="av" id="pAv">🙂</div><p id="pName" style="text-align:center;font-weight:700">میوان</p>
   <div style="height:14px"></div>
-  <div class="glass item">پڕۆفایلەکان<span>›</span></div>
+  <div class="glass item" id="aItem"><b id="aEt" style="font-weight:400">چوونە ژوورەوە بە ئیمەیڵ</b><span>›</span></div>
+  <div class="glass item" id="pEdit"><b id="pEt" style="font-weight:400">دروستکردنی پڕۆفایل</b><span>›</span></div>
+  <div class="glass item" id="pList">پڕۆفایلەکان و گۆڕین<span>›</span></div>
   <div class="glass item">مێژووی تەماشاکردن<span>›</span></div>
   <div class="glass item">پلانی بەشداری (VIP)<span>›</span></div>
   <div class="glass item">پاراستن بە PIN<span>›</span></div>
-  <div class="glass item">زمان<span>کوردی سۆرانی</span></div>
+  <div class="glass item" id="lgItem">زمان<span id="lgName">کوردی سۆرانی</span></div>
 </div>
 
 <div class="sheet" id="det">
@@ -95,6 +100,37 @@ transition:left .4s cubic-bezier(.3,1.35,.5,1),width .4s cubic-bezier(.3,1.35,.5
   <h3>هاوشێوەکان</h3><div class="row" id="sim"></div>
 </div>
 
+<div class="sheet" id="pfs">
+  <button class="glass back" id="pbk">›</button>
+  <h3 style="margin-top:72px">پڕۆفایلەکان</h3>
+  <div id="pl"></div>
+  <div class="pad"><button class="btn" id="pAdd" style="width:100%;margin-top:6px">＋ پڕۆفایلی نوێ</button></div>
+  <div id="pform" style="display:none">
+    <h3>ناوەکەت</h3><input id="pn" maxlength="20" placeholder="ناوی پڕۆفایل">
+    <h3>وێنەی پڕۆفایل</h3><div class="av" id="pprev">🙂</div><div class="pad" style="text-align:center"><button class="btn g" id="pPhoto" style="margin:0">📷 وێنە لە گەلەری</button><input type="file" id="pFile" accept="image/*" hidden></div><div id="pe" style="margin-top:12px"></div>
+    <div class="pad" style="margin-top:18px"><button class="btn" id="pSave">پاشەکەوتکردن</button><button class="btn g" id="pCancel">پاشگەزبوونەوە</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="aus">
+  <button class="glass back" id="abk">›</button>
+  <h3 style="margin-top:72px">چوونە ژوورەوە بە ئیمەیڵ</h3>
+  <div id="aform">
+    <input id="ae" type="email" dir="ltr" placeholder="ئیمەیڵ" autocomplete="email">
+    <input id="ap" type="password" dir="ltr" placeholder="پاسوۆرد" autocomplete="current-password">
+    <div class="pad" style="margin-top:14px"><button class="btn" id="aIn">چوونە ژوورەوە</button><button class="btn g" id="aUp">هەژمار دروست بکە</button></div>
+    <div class="pad"><button class="btn g" id="aRs" style="margin:12px 0 0">پاسوۆردم لەبیرچووە</button></div>
+  </div>
+  <div id="aout" style="display:none"><p id="aem" class="empty"></p><div class="pad"><button class="btn g" id="aLo" style="margin:0">دەرچوون</button></div></div>
+  <p id="amsg" class="empty" style="padding:16px"></p>
+</div>
+
+<div class="sheet" id="lgs">
+  <button class="glass back" id="lbk">›</button>
+  <h3 style="margin-top:72px">زمان</h3>
+  <div id="ll"></div>
+</div>
+
 <nav id="nav"><i class="ind" id="ind"></i>
   <button data-v="home" class="on"><span>🏠</span>سەرەکی</button>
   <button data-v="search"><span>🔍</span>گەڕان</button>
@@ -103,6 +139,8 @@ transition:left .4s cubic-bezier(.3,1.35,.5,1),width .4s cubic-bezier(.3,1.35,.5
   <button data-v="prof"><span>👤</span>پڕۆفایل</button>
 </nav>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 var C=[["#7c3aed","#ec4899"],["#0ea5e9","#6366f1"],["#f97316","#be123c"],["#10b981","#0f766e"],["#eab308","#b45309"],["#d946ef","#4338ca"]];
 var M=[
@@ -146,11 +184,143 @@ function play(){$("pl").style.display="flex";$("pl").scrollIntoView({behavior:"s
 $("dPlay").onclick=play;$("hPlay").onclick=function(e){e.stopPropagation();open_(5);play()};
 $("pp").onclick=function(){var on=$("pp").textContent=="▶";$("pp").textContent=on?"❚❚":"▶";clearInterval(t);
  if(on){var w=parseFloat($("pg").style.width)||0;t=setInterval(function(){w=Math.min(100,w+1);$("pg").style.width=w+"%"},300)}};
-function tf(i){fav[i]=!fav[i];try{localStorage.setItem("chawFav",JSON.stringify(fav))}catch(e){}render()}
+function tf(i){fav[i]=!fav[i];try{localStorage.setItem("chawFav_"+curP,JSON.stringify(fav))}catch(e){}render()}
 $("dFav").onclick=function(){tf(cur);$("dFav").textContent=fav[cur]?"❤️ لە دڵخوازەکان":"♡ دڵخواز"};
 $("hFav").onclick=function(e){e.stopPropagation();tf(5);$("hFav").textContent=fav[5]?"✓ زیادکرا":"＋ لیستەکەم"};
-try{fav=JSON.parse(localStorage.getItem("chawFav"))||{}}catch(e){}
+var P=[],curP="",editId=null,selAv="🙂",selImg="",AVS=["🙂","😎","🦁","🐯","🦅","🐺","🌸","🔥","⭐","🎬","👑","🌙"];
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function sv(){try{localStorage.setItem("chawProfiles",JSON.stringify(P));localStorage.setItem("chawCur",curP)}catch(e){}}
+function loadProf(){try{P=JSON.parse(localStorage.getItem("chawProfiles"))||[];curP=localStorage.getItem("chawCur")||""}catch(e){}
+ if(!P.some(function(p){return p.id==curP}))curP=P.length?P[0].id:""}
+function cp(){return P.filter(function(p){return p.id==curP})[0]}
+function loadFav(){fav={};try{fav=JSON.parse(localStorage.getItem("chawFav_"+curP))||{}}catch(e){}}
+function avH(p){return p&&p.img?'<img class="pimg" src="'+p.img+'">':p?p.av:"🙂"}
+function renderProf(){var p=cp();$("pAv").innerHTML=avH(p);$("pName").textContent=p?p.name:"میوان";$("pEt").textContent=p?"دەستکاریکردنی پڕۆفایل":"دروستکردنی پڕۆفایل"}
+function renderPL(){$("pl").innerHTML=P.map(function(p){return'<div class="glass item" data-sw="'+p.id+'"><span style="display:flex;align-items:center;gap:12px;pointer-events:none"><b style="font-size:28px;font-weight:400">'+avH(p)+'</b>'+esc(p.name)+(p.id==curP?" ✓":"")+'</span><span><button class="mini" data-ed="'+p.id+'">✎</button><button class="mini" data-del="'+p.id+'">🗑</button></span></div>'}).join("")||'<div class="empty">هیچ پڕۆفایلێک نییە</div>';
+ $("pAdd").style.display=P.length>=5?"none":""}
+function drawAv(){$("pprev").innerHTML=selImg?'<img class="pimg" src="'+selImg+'">':selAv;$("pe").innerHTML=AVS.map(function(a){return'<span class="eo'+(a==selAv?" on":"")+'" data-a="'+a+'">'+a+'</span>'}).join("")}
+function openForm(id){editId=id||null;var p=P.filter(function(x){return x.id==id})[0];$("pn").value=p?p.name:"";selAv=p?p.av:AVS[0];selImg=p?(p.img||""):"";drawAv();$("pform").style.display="block"}
+function openPS(id,form){renderPL();$("pform").style.display="none";if(form)openForm(id);$("pfs").classList.add("on");$("pfs").scrollTop=0}
+$("pEdit").onclick=function(){var p=cp();openPS(p?p.id:null,true)};
+$("pList").onclick=function(){openPS(null,false)};
+$("pbk").onclick=function(){$("pfs").classList.remove("on")};
+$("pAdd").onclick=function(){openForm()};
+$("pCancel").onclick=function(){$("pform").style.display="none"};
+$("pe").onclick=function(e){var a=e.target.dataset.a;if(a){selAv=a;selImg="";drawAv()}};
+$("pSave").onclick=function(){var n=$("pn").value.trim().slice(0,20);if(!n){$("pn").focus();return}
+ if(editId){P.forEach(function(p){if(p.id==editId){p.name=n;p.av=selAv;p.img=selImg}})}
+ else{var id="p"+Date.now();P.push({id:id,name:n,av:selAv,img:selImg});curP=id;loadFav()}
+ sv();$("pform").style.display="none";renderPL();renderProf();render()};
+$("pl").onclick=function(e){var d=e.target.dataset;
+ if(d.ed){openForm(d.ed);return}
+ if(d.del){if(confirm(tt("ئەم پڕۆفایلە بسڕدرێتەوە؟"))){P=P.filter(function(p){return p.id!=d.del});try{localStorage.removeItem("chawFav_"+d.del)}catch(x){}
+  if(curP==d.del)curP=P.length?P[0].id:"";sv();loadFav();renderPL();renderProf();render()}return}
+ var r=e.target.closest("[data-sw]");if(r){curP=r.dataset.sw;sv();loadFav();renderPL();renderProf();render()}};
+loadProf();loadFav();renderProf();renderPL();
 render();moveInd();window.addEventListener("resize",moveInd);window.addEventListener("load",moveInd);
+/* ===== زمان / Languages ===== */
+var LG="ckb",LI=["ckb","en","ar","tr","fa"],LN={ckb:"کوردی سۆرانی",en:"English",ar:"العربية",tr:"Türkçe",fa:"فارسی"},D=Object.create(null),orig=new WeakMap();
+[["▶ تەماشاکردن","▶ Watch","▶ مشاهدة","▶ İzle","▶ تماشا"],
+["＋ لیستەکەم","＋ My List","＋ قائمتي","＋ Listem","＋ فهرست من"],
+["✓ زیادکرا","✓ Added","✓ تمت الإضافة","✓ Eklendi","✓ افزوده شد"],
+["بەردەوامبوون لە بینین","Continue Watching","متابعة المشاهدة","İzlemeye Devam Et","ادامه تماشا"],
+["نوێی ئەم هەفتەیە","New This Week","جديد هذا الأسبوع","Bu Haftanın Yenileri","جدید این هفته"],
+["زۆر بینراوەکان","Most Watched","الأكثر مشاهدة","En Çok İzlenenler","پربازدیدترین‌ها"],
+["فیلمی کوردی","Kurdish Films","أفلام كردية","Kürtçe Filmler","فیلم‌های کردی"],
+["🔍 گەڕان بە ناوی فیلم، ئەکتەر، دەرهێنەر...","🔍 Search film, actor, director...","🔍 ابحث عن فيلم أو ممثل أو مخرج...","🔍 Film, oyuncu, yönetmen ara...","🔍 جستجوی فیلم، بازیگر، کارگردان..."],
+["هەموو فیلمەکان","All Films","كل الأفلام","Tüm Filmler","همه فیلم‌ها"],
+["هەموو","All","الكل","Tümü","همه"],
+["ئاکشن","Action","أكشن","Aksiyon","اکشن"],
+["درامە","Drama","دراما","Dram","درام"],
+["ڕاوەستان","Thriller","إثارة","Gerilim","هیجان‌انگیز"],
+["ڕۆمانسی","Romance","رومانسي","Romantik","عاشقانه"],
+["کۆمیدی","Comedy","كوميديا","Komedi","کمدی"],
+["ماجەرا","Adventure","مغامرة","Macera","ماجراجویی"],
+["فیلمەکان","Films","الأفلام","Filmler","فیلم‌ها"],
+["دڵخوازەکان ❤️","Favorites ❤️","المفضلة ❤️","Favoriler ❤️","علاقه‌مندی‌ها ❤️"],
+["هیچ فیلمێک نییە","No films","لا توجد أفلام","Film yok","فیلمی نیست"],
+["میوان","Guest","ضيف","Misafir","مهمان"],
+["دروستکردنی پڕۆفایل","Create profile","إنشاء ملف شخصي","Profil oluştur","ساخت پروفایل"],
+["دەستکاریکردنی پڕۆفایل","Edit profile","تعديل الملف الشخصي","Profili düzenle","ویرایش پروفایل"],
+["پڕۆفایلەکان و گۆڕین","Profiles & switching","الملفات الشخصية والتبديل","Profiller ve geçiş","پروفایل‌ها و تغییر"],
+["مێژووی تەماشاکردن","Watch history","سجل المشاهدة","İzleme geçmişi","تاریخچه تماشا"],
+["پلانی بەشداری (VIP)","Subscription plan (VIP)","خطة الاشتراك (VIP)","Abonelik planı (VIP)","طرح اشتراک (VIP)"],
+["پاراستن بە PIN","PIN protection","الحماية برمز PIN","PIN koruması","محافظت با PIN"],
+["زمان","Language","اللغة","Dil","زبان"],
+["▶ پەخشکردن","▶ Play","▶ تشغيل","▶ Oynat","▶ پخش"],
+["♡ دڵخواز","♡ Favorite","♡ مفضلة","♡ Favori","♡ علاقه‌مندی"],
+["❤️ لە دڵخوازەکان","❤️ In favorites","❤️ في المفضلة","❤️ Favorilerde","❤️ در علاقه‌مندی‌ها"],
+["پوختەی چیرۆک","Synopsis","ملخص القصة","Özet","خلاصه داستان"],
+["هاوشێوەکان","Similar","مشابهة","Benzerleri","مشابه‌ها"],
+["720p · خێرایی ١x · ژێرنووسی کوردی","720p · Speed 1x · Kurdish subtitles","720p · السرعة 1x · ترجمة كردية","720p · Hız 1x · Kürtçe altyazı","720p · سرعت 1x · زیرنویس کردی"],
+["کوردی","Kurdish","كردي","Kürtçe","کردی"],
+["دۆبلاژکراو","Dubbed","مدبلج","Dublajlı","دوبله‌شده"],
+["سەرەکی","Home","الرئيسية","Ana Sayfa","خانه"],
+["گەڕان","Search","بحث","Ara","جستجو"],
+["دڵخواز","Favorites","المفضلة","Favoriler","علاقه‌مندی"],
+["پڕۆفایل","Profile","الملف","Profil","پروفایل"],
+["پڕۆفایلەکان","Profiles","الملفات الشخصية","Profiller","پروفایل‌ها"],
+["＋ پڕۆفایلی نوێ","＋ New profile","＋ ملف جديد","＋ Yeni profil","＋ پروفایل جدید"],
+["ناوەکەت","Your name","اسمك","Adın","نام شما"],
+["ناوی پڕۆفایل","Profile name","اسم الملف","Profil adı","نام پروفایل"],
+["وێنەی پڕۆفایل","Profile picture","صورة الملف","Profil resmi","عکس پروفایل"],
+["پاشەکەوتکردن","Save","حفظ","Kaydet","ذخیره"],
+["پاشگەزبوونەوە","Cancel","إلغاء","İptal","انصراف"],
+["هیچ پڕۆفایلێک نییە","No profiles","لا توجد ملفات","Profil yok","پروفایلی نیست"],
+["📷 وێنە لە گەلەری","📷 Photo from gallery","📷 صورة من المعرض","📷 Galeriden fotoğraf","📷 عکس از گالری"],
+["ئەم پڕۆفایلە بسڕدرێتەوە؟","Delete this profile?","حذف هذا الملف؟","Bu profil silinsin mi?","این پروفایل حذف شود؟"],
+["چوونە ژوورەوە بە ئیمەیڵ","Sign in with email","تسجيل الدخول بالبريد","E-posta ile giriş","ورود با ایمیل"],
+["ئیمەیڵ","Email","البريد الإلكتروني","E-posta","ایمیل"],
+["پاسوۆرد","Password","كلمة المرور","Şifre","رمز عبور"],
+["چوونە ژوورەوە","Sign in","دخول","Giriş yap","ورود"],
+["هەژمار دروست بکە","Create account","إنشاء حساب","Hesap oluştur","ساخت حساب"],
+["پاسوۆردم لەبیرچووە","Forgot password","نسيت كلمة المرور","Şifremi unuttum","رمز را فراموش کردم"],
+["دەرچوون","Sign out","تسجيل الخروج","Çıkış yap","خروج"],
+["نامەی گۆڕینی پاسوۆرد نێردرا","Reset email sent","تم إرسال رسالة إعادة التعيين","Sıfırlama e-postası gönderildi","ایمیل بازنشانی ارسال شد"],
+["هەڵە ڕوویدا: زانیاریەکان بپشکنە (پاسوۆرد لانی کەم ٦ پیت)","Error: check your details (password min. 6 characters)","حدث خطأ: تحقق من البيانات (كلمة المرور 6 أحرف على الأقل)","Hata: bilgileri kontrol edin (şifre en az 6 karakter)","خطا: اطلاعات را بررسی کنید (رمز حداقل ۶ نویسه)"],
+["چوونە ژوورەوە هێشتا چالاک نەکراوە","Sign-in is not enabled yet","تسجيل الدخول غير مفعّل بعد","Giriş henüz etkin değil","ورود هنوز فعال نشده است"]].forEach(function(r){D[r[0]]={en:r[1],ar:r[2],tr:r[3],fa:r[4]}});
+function tt(k){var e=D[k];return LG=="ckb"||!e?k:e[LG]}
+function tr(){var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,a=[];
+ while(n=w.nextNode()){var pn=n.parentNode.nodeName;if(pn!="SCRIPT"&&pn!="STYLE")a.push(n)}
+ a.forEach(function(n){var s=orig.get(n),k=(s&&n.nodeValue==s.v)?s.k:n.nodeValue.trim(),e=D[k];
+  if(!e){orig.delete(n);return}
+  var v=LG=="ckb"?k:e[LG];if(n.nodeValue!=v)n.nodeValue=v;orig.set(n,{k:k,v:v})});
+ [].forEach.call(document.querySelectorAll("[placeholder]"),function(el){var k=el._pk||el.getAttribute("placeholder"),e=D[k];
+  if(e){el._pk=k;el.setAttribute("placeholder",LG=="ckb"?k:e[LG])}})}
+var cfg={childList:true,subtree:true,characterData:true},ob=new MutationObserver(function(){ob.disconnect();tr();moveInd();ob.observe(document.body,cfg)});
+function setLang(l){LG=l;try{localStorage.setItem("chawLang",l)}catch(e){}
+ var h=document.documentElement;h.lang=l;h.dir=(l=="en"||l=="tr")?"ltr":"rtl";
+ $("lgName").textContent=LN[l];tr();moveInd()}
+function drawLL(){$("ll").innerHTML=LI.map(function(l){return'<div class="glass item" data-l="'+l+'">'+LN[l]+(l==LG?" ✓":"")+'</div>'}).join("")}
+$("lang").onclick=$("lgItem").onclick=function(){drawLL();$("lgs").classList.add("on")};
+$("lbk").onclick=function(){$("lgs").classList.remove("on")};
+$("ll").onclick=function(e){var r=e.target.closest("[data-l]");if(r){setLang(r.dataset.l);drawLL();$("lgs").classList.remove("on")}};
+
+/* ===== Photo from gallery ===== */
+$("pPhoto").onclick=function(){$("pFile").click()};
+$("pFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();
+ r.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas"),S=160,m=Math.min(im.width,im.height);
+  c.width=c.height=S;c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,S,S);selImg=c.toDataURL("image/jpeg",.82);drawAv()};im.src=r.result};
+ r.readAsDataURL(f);this.value=""};
+
+/* ===== Email sign-in (Firebase Auth) — پڕکردنەوەی ئەم زانیاریانە لێرە ===== */
+var FB={apiKey:"AIzaSyBfStnmfbta_nnFe30hJznDT1T-sr2PUeo",authDomain:"chawtvapp-35202.firebaseapp.com",projectId:"chawtvapp-35202",storageBucket:"chawtvapp-35202.firebasestorage.app",messagingSenderId:"730332846056",appId:"1:730332846056:web:7cc05f9a293f334810765d"},fbOk=false;
+try{if(FB.apiKey&&window.firebase){firebase.initializeApp(FB);fbOk=true}}catch(e){}
+function am(t){$("amsg").textContent=t}
+function setUser(u){$("aform").style.display=u?"none":"block";$("aout").style.display=u?"block":"none";$("aem").textContent=u?u.email:"";$("aEt").textContent=u?u.email:"چوونە ژوورەوە بە ئیمەیڵ"}
+function ad(f){if(!fbOk){am("چوونە ژوورەوە هێشتا چالاک نەکراوە");return}am("");
+ f($("ae").value.trim(),$("ap").value).catch(function(){am("هەڵە ڕوویدا: زانیاریەکان بپشکنە (پاسوۆرد لانی کەم ٦ پیت)")})}
+$("aItem").onclick=function(){$("aus").classList.add("on")};
+$("abk").onclick=function(){$("aus").classList.remove("on")};
+$("aIn").onclick=function(){ad(function(e,p){return firebase.auth().signInWithEmailAndPassword(e,p)})};
+$("aUp").onclick=function(){ad(function(e,p){return firebase.auth().createUserWithEmailAndPassword(e,p)})};
+$("aRs").onclick=function(){if(!fbOk){am("چوونە ژوورەوە هێشتا چالاک نەکراوە");return}var e=$("ae").value.trim();if(!e){$("ae").focus();return}
+ firebase.auth().sendPasswordResetEmail(e).then(function(){am("نامەی گۆڕینی پاسوۆرد نێردرا")}).catch(function(){am("هەڵە ڕوویدا: زانیاریەکان بپشکنە (پاسوۆرد لانی کەم ٦ پیت)")})};
+$("aLo").onclick=function(){if(fbOk)firebase.auth().signOut()};
+if(fbOk)firebase.auth().onAuthStateChanged(setUser);
+
+var sl="ckb";try{sl=localStorage.getItem("chawLang")||"ckb"}catch(e){}if(!LN[sl])sl="ckb";
+ob.observe(document.body,cfg);setLang(sl);
 </script>
 </body>
 </html>
