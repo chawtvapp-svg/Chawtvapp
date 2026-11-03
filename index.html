@@ -79,6 +79,9 @@ html.light #nav{background:rgba(255,255,255,.72);border-color:rgba(0,0,0,.1);box
 html.light #nav::before{display:none}
 html.light #nav button{color:rgba(0,0,0,.5)}html.light #nav button.on{color:#000;text-shadow:none}
 html.light .chip{color:var(--t)}html.light .chip.on{color:#fff}
+select,textarea{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--t);font:inherit;outline:0}
+.poster{text-shadow:0 1px 6px #000}.vp{margin:16px;aspect-ratio:16/9;border-radius:20px;background:#000;overflow:hidden}.vp iframe,.vp video{width:100%;height:100%;border:0}
+.pimgp{width:90px;height:135px;border-radius:12px;object-fit:cover;display:block;margin:8px auto;background:var(--card)}
 </style>
 </head>
 <body>
@@ -106,6 +109,7 @@ html.light .chip{color:var(--t)}html.light .chip.on{color:#fff}
     <div class="r2" id="aItem"><b id="aEt" style="font-weight:400">چوونە ژوورەوە بە ئیمەیڵ</b><span>›</span></div>
     <div class="r2" id="pEdit"><b id="pEt" style="font-weight:400">دروستکردنی پڕۆفایل</b><span>›</span></div>
     <div class="r2" id="pList">پڕۆفایلەکان و گۆڕین<span>›</span></div>
+    <div class="r2" id="admRow" style="display:none">زیادکردنی فیلم<span>›</span></div>
   </div>
   <div class="grp">
     <div class="r2">دۆخی تاریک<label class="sw"><input type="checkbox" id="swDark"><i></i></label></div>
@@ -129,15 +133,34 @@ html.light .chip{color:var(--t)}html.light .chip.on{color:#fff}
   <div class="cover" id="cv"><div class="in"><h2 id="dT"></h2><div class="meta" id="dM"></div></div></div>
   <div class="pad"><button class="btn" id="dPlay">▶ پەخشکردن</button><button class="btn g" id="dFav">♡ دڵخواز</button><button class="btn g" id="dDl">⬇ داگرتن</button>
   <h3 style="margin:20px 0 8px">پوختەی چیرۆک</h3><p id="dD"></p></div>
+  <div class="vp" id="vp" style="display:none"></div>
   <div class="player" id="pl" style="display:none"><button class="play" id="pp">▶</button>
     <div class="ctl"><div class="bar"><i id="pg"></i></div>720p · خێرایی ١x · ژێرنووسی کوردی</div></div>
   <h3>هاوشێوەکان</h3><div class="row" id="sim"></div>
 </div>
 
+<div class="sheet" id="adm">
+  <button class="glass back" id="admBk">›</button>
+  <h3 style="margin-top:72px">زیادکردنی فیلم</h3>
+  <input id="fT" maxlength="60" placeholder="ناوی فیلم">
+  <select id="fG"></select>
+  <input id="fY" inputmode="numeric" placeholder="ساڵ (٢٠٢٥)">
+  <input id="fD" placeholder="ماوە (١ کاتژمێر و ٥٠ خولەک)">
+  <input id="fR" placeholder="ڕەیتینگ (٨.٤)">
+  <select id="fL"><option>کوردی</option><option>دۆبلاژکراو</option></select>
+  <textarea id="fS" rows="4" placeholder="کورتەی چیرۆک"></textarea>
+  <img class="pimgp" id="fPrev" alt="">
+  <div class="pad" style="text-align:center"><button class="btn g" id="fPb" style="margin:0">📷 پۆستەر لە گەلەری</button><input type="file" id="fPf" accept="image/*" hidden></div>
+  <input id="fV" dir="ltr" placeholder="بەستەری ڤیدیۆ (YouTube / Drive / mp4)">
+  <div class="pad" style="margin-top:14px"><button class="btn" id="fSave">پاشەکەوتکردن</button></div>
+  <p id="fMsg" class="empty" style="padding:14px"></p>
+  <h3>فیلمەکانم</h3><div class="grp" id="fList"></div>
+</div>
+
 <div class="sheet" id="pfs">
   <button class="glass back" id="pbk">›</button>
   <h3 style="margin-top:72px">پڕۆفایلەکان</h3>
-  <div id="pl"></div>
+  <div id="pll"></div>
   <div class="pad"><button class="btn" id="pAdd" style="width:100%;margin-top:6px">＋ پڕۆفایلی نوێ</button></div>
   <div id="pform" style="display:none">
     <h3>ناوەکەت</h3><input id="pn" maxlength="20" placeholder="ناوی پڕۆفایل">
@@ -175,6 +198,7 @@ html.light .chip{color:var(--t)}html.light .chip.on{color:#fff}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 var C=[["#7c3aed","#ec4899"],["#0ea5e9","#6366f1"],["#f97316","#be123c"],["#10b981","#0f766e"],["#eab308","#b45309"],["#d946ef","#4338ca"]];
 var M=[
@@ -187,14 +211,20 @@ var M=[
 var G=["هەموو","ئاکشن","درامە","ڕاوەستان","ڕۆمانسی","کۆمیدی","ماجەرا"];
 var fav={},cur=0,cat="هەموو";
 var $=function(i){return document.getElementById(i)};
-function bg(i){var c=C[i%6];return"background:linear-gradient(160deg,"+c[0]+","+c[1]+")"}
-function card(i){return'<div class="card" data-i="'+i+'"><div class="poster" style="'+bg(i)+'">'+M[i][0]+'</div><small>★ '+M[i][4]+' · '+M[i][2]+'</small></div>'}
+function bg(i){var c=C[i%6];if(M[i]&&M[i][7])return"background:url("+M[i][7]+") center/cover";return"background:linear-gradient(160deg,"+c[0]+","+c[1]+")"}
+function card(i){return'<div class="card" data-i="'+i+'"><div class="poster" style="'+bg(i)+'">'+esc(M[i][0])+'</div><small>★ '+M[i][4]+' · '+M[i][2]+'</small></div>'}
 function fill(id,list){$(id).innerHTML=list.length?list.map(card).join(""):'<div class="empty" style="grid-column:1/-1">هیچ فیلمێک نییە</div>'}
 var ids=M.map(function(_,i){return i});
+var heroI=0;
+function num(s){return parseFloat(String(s).replace(/[٠-٩]/g,function(d){return d.charCodeAt(0)-1632}))||0}
 function render(){
- fill("r1",[2,0,3]);fill("r2",[5,0,2,1]);fill("r3",[5,1,0,4]);fill("r4",[0,1,3,4]);fill("all",ids);
- fill("fg",ids.filter(function(i){return fav[i]}));fill("pf1",ids.filter(function(i){return fav[i]}));fill("pf2",ids.filter(function(i){return dl[i]}));fill("pf3",[2,0,3,5]);
- $("hero").style.cssText=bg(5);$("hT").textContent=M[5][0];$("hP").textContent=M[5][1]+" · "+M[5][2]+" · ★ "+M[5][4];
+ var all=ids.slice(),nw=all.slice().reverse(),top=all.slice().sort(function(a,b){return num(M[b][4])-num(M[a][4])});
+ fill("r1",all.slice(0,4));fill("r2",nw.slice(0,6));fill("r3",top.slice(0,6));
+ fill("r4",all.filter(function(i){return M[i][5]=="کوردی"}));fill("all",all);
+ fill("fg",all.filter(function(i){return fav[i]}));fill("pf1",all.filter(function(i){return fav[i]}));
+ fill("pf2",all.filter(function(i){return dl[i]}));fill("pf3",nw.slice(0,6));
+ if(M.length){heroI=M.length-1;$("hero").style.cssText=bg(heroI);$("hT").textContent=M[heroI][0];
+  $("hP").textContent=M[heroI][1]+" · "+M[heroI][2]+" · ★ "+M[heroI][4]}
  doSearch()}
 function doSearch(){var q=$("q").value.trim();
  fill("grid",ids.filter(function(i){return(cat=="هەموو"||M[i][1]==cat)&&(!q||M[i][0].indexOf(q)>-1||M[i][1].indexOf(q)>-1)}))}
@@ -215,12 +245,12 @@ document.body.onclick=function(e){var c=e.target.closest(".card");if(c)open_(+c.
 $("bk").onclick=function(){$("det").classList.remove("on");clearInterval(t)};
 var t;
 function play(){$("pl").style.display="flex";$("pl").scrollIntoView({behavior:"smooth",block:"center"})}
-$("dPlay").onclick=play;$("hPlay").onclick=function(e){e.stopPropagation();open_(5);play()};
+$("dPlay").onclick=play;$("hPlay").onclick=function(e){e.stopPropagation();open_(heroI);play()};
 $("pp").onclick=function(){var on=$("pp").textContent=="▶";$("pp").textContent=on?"❚❚":"▶";clearInterval(t);
  if(on){var w=parseFloat($("pg").style.width)||0;t=setInterval(function(){w=Math.min(100,w+1);$("pg").style.width=w+"%"},300)}};
 function tf(i){fav[i]=!fav[i];try{localStorage.setItem("chawFav_"+curP,JSON.stringify(fav))}catch(e){}render()}
 $("dFav").onclick=function(){tf(cur);$("dFav").textContent=fav[cur]?"❤️ لە دڵخوازەکان":"♡ دڵخواز"};
-$("hFav").onclick=function(e){e.stopPropagation();tf(5);$("hFav").textContent=fav[5]?"✓ زیادکرا":"＋ لیستەکەم"};
+$("hFav").onclick=function(e){e.stopPropagation();tf(heroI);$("hFav").textContent=fav[heroI]?"✓ زیادکرا":"＋ لیستەکەم"};
 var P=[],curP="",editId=null,selAv="🙂",selImg="",AVS=["🙂","😎","🦁","🐯","🦅","🐺","🌸","🔥","⭐","🎬","👑","🌙"];
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function sv(){try{localStorage.setItem("chawProfiles",JSON.stringify(P));localStorage.setItem("chawCur",curP)}catch(e){}}
@@ -230,7 +260,7 @@ function cp(){return P.filter(function(p){return p.id==curP})[0]}
 var dl={};function loadFav(){dl={};try{dl=JSON.parse(localStorage.getItem("chawDl_"+curP))||{}}catch(e){}fav={};try{fav=JSON.parse(localStorage.getItem("chawFav_"+curP))||{}}catch(e){}}
 function avH(p){return p&&p.img?'<img class="pimg" src="'+p.img+'">':p?p.av:"🙂"}
 function renderProf(){var p=cp();$("pAv").innerHTML=avH(p);$("pName").textContent=p?p.name:"میوان";$("pEt").textContent=p?"دەستکاریکردنی پڕۆفایل":"دروستکردنی پڕۆفایل"}
-function renderPL(){$("pl").innerHTML=P.map(function(p){return'<div class="glass item" data-sw="'+p.id+'"><span style="display:flex;align-items:center;gap:12px;pointer-events:none"><b style="font-size:28px;font-weight:400">'+avH(p)+'</b>'+esc(p.name)+(p.id==curP?" ✓":"")+'</span><span><button class="mini" data-ed="'+p.id+'">✎</button><button class="mini" data-del="'+p.id+'">🗑</button></span></div>'}).join("")||'<div class="empty">هیچ پڕۆفایلێک نییە</div>';
+function renderPL(){$("pll").innerHTML=P.map(function(p){return'<div class="glass item" data-sw="'+p.id+'"><span style="display:flex;align-items:center;gap:12px;pointer-events:none"><b style="font-size:28px;font-weight:400">'+avH(p)+'</b>'+esc(p.name)+(p.id==curP?" ✓":"")+'</span><span><button class="mini" data-ed="'+p.id+'">✎</button><button class="mini" data-del="'+p.id+'">🗑</button></span></div>'}).join("")||'<div class="empty">هیچ پڕۆفایلێک نییە</div>';
  $("pAdd").style.display=P.length>=5?"none":""}
 function drawAv(){$("pprev").innerHTML=selImg?'<img class="pimg" src="'+selImg+'">':selAv;$("pe").innerHTML=AVS.map(function(a){return'<span class="eo'+(a==selAv?" on":"")+'" data-a="'+a+'">'+a+'</span>'}).join("")}
 function openForm(id){editId=id||null;var p=P.filter(function(x){return x.id==id})[0];$("pn").value=p?p.name:"";selAv=p?p.av:AVS[0];selImg=p?(p.img||""):"";drawAv();$("pform").style.display="block"}
@@ -245,7 +275,7 @@ $("pSave").onclick=function(){var n=$("pn").value.trim().slice(0,20);if(!n){$("p
  if(editId){P.forEach(function(p){if(p.id==editId){p.name=n;p.av=selAv;p.img=selImg}})}
  else{var id="p"+Date.now();P.push({id:id,name:n,av:selAv,img:selImg});curP=id;loadFav()}
  sv();$("pform").style.display="none";renderPL();renderProf();render()};
-$("pl").onclick=function(e){var d=e.target.dataset;
+$("pll").onclick=function(e){var d=e.target.dataset;
  if(d.ed){openForm(d.ed);return}
  if(d.del){if(confirm(tt("ئەم پڕۆفایلە بسڕدرێتەوە؟"))){P=P.filter(function(p){return p.id!=d.del});try{localStorage.removeItem("chawFav_"+d.del)}catch(x){}
   if(curP==d.del)curP=P.length?P[0].id:"";sv();loadFav();renderPL();renderProf();render()}return}
@@ -382,6 +412,50 @@ setInterval(function(){if(st.auto&&$("det").classList.contains("on")&&parseFloat
 var _rp=renderProf;renderProf=function(){_rp();var p=cp();
  $("pbg").style.cssText=p&&p.img?'background:url("'+p.img+'") center/cover':""};
 renderProf();render();
+
+/* ===== Firestore films + admin ===== */
+var ADMIN="chawtvapp@gmail.com",SM=M,db=null,remote=[];
+function cl(x){return String(x==null?"":x).replace(/[<>&"]/g,"")}
+function ytId(u){var m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:""}
+function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/);
+ if(y)return'<iframe src="https://www.youtube-nocookie.com/embed/'+y+'?playsinline=1&autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
+ if(g)return'<iframe src="https://drive.google.com/file/d/'+g[1]+'/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+ if(a)return'<iframe src="https://archive.org/embed/'+a[1]+'" allowfullscreen></iframe>';
+ return'<video controls autoplay playsinline src="'+cl(u)+'"></video>'}
+function stopV(){$("vp").innerHTML="";$("vp").style.display="none"}
+var _pl=play;play=function(){var u=M[cur]&&M[cur][8];
+ if(u){$("pl").style.display="none";$("vp").innerHTML=embed(u);$("vp").style.display="block";$("vp").scrollIntoView({behavior:"smooth",block:"center"})}
+ else{stopV();_pl()}};
+$("dPlay").onclick=play;
+var _o2=open_;open_=function(i){stopV();_o2(i)};
+$("bk").addEventListener("click",stopV);
+function loadRemote(sn){remote=[];sn.forEach(function(d){var x=d.data();
+ remote.push([x.title||"",cl(x.genre),cl(x.year),cl(x.duration),cl(x.rating),cl(x.lang),x.synopsis||"",x.poster||"",x.video||"",d.id])});
+ M=remote.length?remote:SM;ids=M.map(function(_,i){return i});render();drawFL()}
+if(fbOk&&firebase.firestore){try{db=firebase.firestore();
+ db.collection("films").orderBy("createdAt").onSnapshot(loadRemote,function(){})}catch(e){}}
+$("fG").innerHTML=G.slice(1).map(function(g){return"<option>"+g+"</option>"}).join("");
+var fImg="";
+function drawFL(){$("fList").innerHTML=remote.length?remote.map(function(m){return'<div class="r2"><span style="color:var(--t)">'+esc(m[0])+'</span><button class="mini" data-fd="'+m[9]+'">🗑</button></div>'}).join(""):'<div class="empty">هێشتا فیلمێک زیاد نەکراوە</div>'}
+drawFL();
+function fm(t){$("fMsg").textContent=t}
+if(fbOk)firebase.auth().onAuthStateChanged(function(u){$("admRow").style.display=(u&&u.email&&u.email.toLowerCase()==ADMIN)?"":"none"});
+$("admRow").onclick=function(){fm("");$("adm").classList.add("on");$("adm").scrollTop=0};
+$("admBk").onclick=function(){$("adm").classList.remove("on")};
+$("fPb").onclick=function(){$("fPf").click()};
+$("fPf").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();
+ r.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=300;c.height=450;var x=c.getContext("2d"),
+  k=Math.max(300/im.width,450/im.height),w=im.width*k,h=im.height*k;x.drawImage(im,(300-w)/2,(450-h)/2,w,h);
+  fImg=c.toDataURL("image/jpeg",.8);$("fPrev").src=fImg};im.src=r.result};r.readAsDataURL(f);this.value=""};
+$("fSave").onclick=function(){
+ if(!db){fm("هێشتا Firestore چالاک نەبووە");return}
+ var t=$("fT").value.trim();if(!t){$("fT").focus();fm("ناوی فیلم بنووسە");return}
+ var b=$("fSave");b.disabled=true;fm("چاوەڕێ بکە...");
+ db.collection("films").add({title:t,genre:$("fG").value,year:$("fY").value.trim(),duration:$("fD").value.trim(),rating:$("fR").value.trim(),
+  lang:$("fL").value,synopsis:$("fS").value.trim(),poster:fImg,video:$("fV").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()})
+ .then(function(){b.disabled=false;fm("✓ فیلمەکە زیاد کرا");["fT","fY","fD","fR","fS","fV"].forEach(function(i){$(i).value=""});fImg="";$("fPrev").removeAttribute("src")})
+ .catch(function(e){b.disabled=false;fm(e&&e.code=="permission-denied"?"ڕێگەپێدراو نیت. بە ئیمەیڵی بەڕێوەبەر بچۆ ژوورەوە":"هەڵە ڕوویدا، دووبارە هەوڵ بدەوە")})};
+$("fList").onclick=function(e){var id=e.target.dataset.fd;if(id&&db&&confirm("ئەم فیلمە بسڕدرێتەوە؟"))db.collection("films").doc(id).delete().catch(function(){fm("نەسڕایەوە")})};
 
 var sl="ckb";try{sl=localStorage.getItem("chawLang")||"ckb"}catch(e){}if(!LN[sl])sl="ckb";
 ob.observe(document.body,cfg);setLang(sl);
