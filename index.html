@@ -77,17 +77,48 @@ html.light .back,html.light input,html.light .mini,html.light .play,html.light .
 html.light #lang{color:#111!important}html.light .pad p{color:#333}
 html.light #nav{background:rgba(255,255,255,.72);border-color:rgba(0,0,0,.1);box-shadow:0 10px 30px rgba(0,0,0,.15)}
 html.light #nav::before{display:none}
-html.light #nav button{color:rgba(0,0,0,.5)}html.light #nav button.on{color:#000;text-shadow:none}
+html.light #nav button{color:rgba(0,0,0,.5)}html.light #nav button.on{color:#fff}
 html.light .chip{color:var(--t)}html.light .chip.on{color:#fff}
 select,textarea{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--t);font:inherit;outline:0}
 .poster{text-shadow:0 1px 6px #000}.vp{margin:16px;aspect-ratio:16/9;border-radius:20px;background:#000;overflow:hidden}.vp iframe,.vp video{width:100%;height:100%;border:0}
 .pimgp{width:90px;height:135px;border-radius:12px;object-fit:cover;display:block;margin:8px auto;background:var(--card)}
+
+/* nav: icons only */
+#nav{background:rgba(22,22,28,.94);backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(255,255,255,.14);border-radius:40px;padding:8px;box-shadow:0 12px 30px rgba(0,0,0,.5);overflow:visible}
+#nav::before{display:none}
+#nav .ind{top:8px;bottom:8px;border-radius:50%;background:var(--p);border:0;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 0 28px rgba(168,85,247,.7)}
+#nav button{height:56px;padding:0;color:#9ca3af;font-size:0}
+#nav button svg{width:27px;height:27px;fill:currentColor}
+#nav button.on{color:#fff;text-shadow:none}
+html.light #nav{background:rgba(255,255,255,.96)}
+/* profile cover */
+.pcover>.pbg{position:absolute;inset:-30px;z-index:0}
+.pcover>.pbg.img{inset:0;filter:none;opacity:1;transform:none}
+.pcover.hasbg{padding-top:70px}
+.pcover.hasbg p,.pcover.hasbg .stats{color:#fff;text-shadow:0 1px 8px #000}
+.bgbtn{position:absolute!important;top:12px;inset-inline-start:14px;z-index:3;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:18px}
+.bgbtn.rm{inset-inline-start:64px}
+.stats{text-align:center;color:var(--m);font-size:14px;font-weight:600;margin-top:4px}
+#hst{text-align:start;padding:0 16px 10px;margin:0}
+/* login */
+#aus{background:radial-gradient(circle at 50% -10%,#4c2a99,transparent 60%),var(--bg)}
+.lgo{text-align:center;font-weight:800;font-size:38px;color:var(--glow);margin-top:84px}.lgo b{color:var(--t)}
+.tag{text-align:center;letter-spacing:4px;font-size:12px;color:var(--m);margin:6px 0 26px;direction:ltr}
+.lgc{margin:0 16px;padding:24px 22px;border-radius:30px;background:rgba(18,16,28,.8);border:1px solid rgba(139,92,246,.28)}
+.lgc h2{font-size:26px}.lgc p{color:var(--m);font-size:14px;margin:6px 0 18px}
+.lgc label{display:block;font-size:12px;letter-spacing:1px;color:var(--m);margin:10px 0 6px;font-weight:700}
+.lgc input{width:100%;margin:0 0 6px;padding:16px;border-radius:18px;background:#14141f;color:#fff}
+.pw{position:relative}.pw input{padding-inline-end:52px}.pw button{position:absolute;top:0;bottom:6px;inset-inline-end:10px;background:0;border:0;font-size:20px}
+.lgc .btn{display:block;width:100%;margin:18px 0 0;padding:16px;border-radius:18px;font-size:16px}
+.lgc .btn.out{background:transparent;border:2px solid rgba(139,92,246,.5);color:var(--glow);box-shadow:none;margin-top:12px}
+html.light .lgc{background:var(--card)}html.light .lgc input{background:#f2f2f7;color:#111}
 </style>
 </head>
 <body>
 <div class="top"><div class="logo">چاو <b>تیڤی</b></div><button class="glass" id="lang" style="color:#fff;border:0;padding:8px 14px;font:inherit">🌐</button></div>
 
 <div class="view on" id="home">
+  <div class="stats" id="hst"></div>
   <div class="hero" id="hero"><div class="in"><h2 id="hT"></h2><p id="hP"></p><button class="btn" id="hPlay">▶ تەماشاکردن</button><button class="btn g" id="hFav">＋ لیستەکەم</button></div></div>
   <h3>بەردەوامبوون لە بینین</h3><div class="row" id="r1"></div>
   <h3>نوێی ئەم هەفتەیە</h3><div class="row" id="r2"></div>
@@ -104,9 +135,9 @@ select,textarea{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radi
 <div class="view" id="favs"><h3>دڵخوازەکان ❤️</h3><div class="grid" id="fg"></div></div>
 
 <div class="view" id="prof">
-  <div class="pcover" id="pcov"><div class="pbg" id="pbg"></div><div class="av" id="pAv">🙂</div><p id="pName" style="text-align:center;font-weight:700;font-size:18px">میوان</p></div>
+  <div class="pcover" id="pcov"><div class="pbg" id="pbg"></div><button class="bgbtn" id="bgBtn" aria-label="background">🖼</button><button class="bgbtn rm" id="bgRm" style="display:none">✕</button><input type="file" id="bgFile" accept="image/*" hidden><div class="av" id="pAv">🙂</div><p id="pName" style="text-align:center;font-weight:700;font-size:18px">میوان</p><div class="stats" id="pst"></div></div>
   <div class="grp">
-    <div class="r2" id="aItem"><b id="aEt" style="font-weight:400">چوونە ژوورەوە بە ئیمەیڵ</b><span>›</span></div>
+    <div class="r2" id="aItem"><b id="aEt" style="font-weight:400">چوونە ژوورەوە / دروستکردنی ئەکاوەنت</b><span>›</span></div>
     <div class="r2" id="pEdit"><b id="pEt" style="font-weight:400">دروستکردنی پڕۆفایل</b><span>›</span></div>
     <div class="r2" id="pList">پڕۆفایلەکان و گۆڕین<span>›</span></div>
     <div class="r2" id="admRow" style="display:none">زیادکردنی فیلم<span>›</span></div>
@@ -142,12 +173,13 @@ select,textarea{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radi
 <div class="sheet" id="adm">
   <button class="glass back" id="admBk">›</button>
   <h3 style="margin-top:72px">زیادکردنی فیلم</h3>
-  <input id="fT" maxlength="60" placeholder="ناوی فیلم">
+  <select id="fK"><option value="فیلم">فیلم</option><option value="زنجیرە">زنجیرە</option></select>
+  <input id="fT" maxlength="60" placeholder="ناوی فیلم یان زنجیرە">
   <select id="fG"></select>
   <input id="fY" inputmode="numeric" placeholder="ساڵ (٢٠٢٥)">
   <input id="fD" placeholder="ماوە (١ کاتژمێر و ٥٠ خولەک)">
   <input id="fR" placeholder="ڕەیتینگ (٨.٤)">
-  <select id="fL"><option>کوردی</option><option>دۆبلاژکراو</option></select>
+  <select id="fL"><option value="کوردی">کوردی</option><option value="دۆبلاژکراو">دۆبلاژکراو</option></select>
   <textarea id="fS" rows="4" placeholder="کورتەی چیرۆک"></textarea>
   <img class="pimgp" id="fPrev" alt="">
   <div class="pad" style="text-align:center"><button class="btn g" id="fPb" style="margin:0">📷 پۆستەر لە گەلەری</button><input type="file" id="fPf" accept="image/*" hidden></div>
@@ -171,14 +203,18 @@ select,textarea{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radi
 
 <div class="sheet" id="aus">
   <button class="glass back" id="abk">›</button>
-  <h3 style="margin-top:72px">چوونە ژوورەوە بە ئیمەیڵ</h3>
-  <div id="aform">
-    <input id="ae" type="email" dir="ltr" placeholder="ئیمەیڵ" autocomplete="email">
-    <input id="ap" type="password" dir="ltr" placeholder="پاسوۆرد" autocomplete="current-password">
-    <div class="pad" style="margin-top:14px"><button class="btn" id="aIn">چوونە ژوورەوە</button><button class="btn g" id="aUp">هەژمار دروست بکە</button></div>
-    <div class="pad"><button class="btn g" id="aRs" style="margin:12px 0 0">پاسوۆردم لەبیرچووە</button></div>
+  <div class="lgo">چاو <b>تیڤی</b></div><div class="tag">STREAM. DISCOVER. ENJOY.</div>
+  <div class="lgc" id="aform">
+    <h2>بەخێربێیتەوە</h2><p>بچۆ ژوورەوە بۆ بەردەوامبوون لە بینین</p>
+    <label>ناوی بەکارهێنەر</label>
+    <input id="ae" dir="ltr" autocapitalize="none" autocorrect="off" autocomplete="username" placeholder="ahmad">
+    <label>پاسوۆرد</label>
+    <div class="pw"><input id="ap" type="password" dir="ltr" autocomplete="current-password" placeholder="••••••"><button type="button" id="aEye">👁</button></div>
+    <button class="btn" id="aIn">چوونە ژوورەوە</button>
+    <button class="btn out" id="aUp">دروستکردنی ئەکاوەنت</button>
+    <button id="aRs" hidden></button>
   </div>
-  <div id="aout" style="display:none"><p id="aem" class="empty"></p><div class="pad"><button class="btn g" id="aLo" style="margin:0">دەرچوون</button></div></div>
+  <div id="aout" style="display:none"><p id="aem" class="empty" style="font-size:20px;color:var(--t)"></p><div class="pad"><button class="btn g" id="aLo" style="margin:0">دەرچوون</button></div></div>
   <p id="amsg" class="empty" style="padding:16px"></p>
 </div>
 
@@ -189,11 +225,11 @@ select,textarea{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radi
 </div>
 
 <nav id="nav"><i class="ind" id="ind"></i>
-  <button data-v="home" class="on"><span>🏠</span>سەرەکی</button>
-  <button data-v="search"><span>🔍</span>گەڕان</button>
-  <button data-v="films"><span>🎬</span>فیلمەکان</button>
-  <button data-v="favs"><span>❤️</span>دڵخواز</button>
-  <button data-v="prof"><span>👤</span>پڕۆفایل</button>
+  <button data-v="home" class="on" aria-label="سەرەکی"><svg viewBox="0 0 24 24"><path d="M12 3 2.6 11.3a1 1 0 0 0 .7 1.7H5v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-7h1.7a1 1 0 0 0 .7-1.7z"/></svg></button>
+  <button data-v="search" aria-label="گەڕان"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.7"/><path d="m16.2 16.2 4.8 4.8" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg></button>
+  <button data-v="films" aria-label="فیلمەکان"><svg viewBox="0 0 24 24"><path d="M3 10h18v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3.3 6.7 15.4-4.2.9 3.2L4.2 9.9z"/></svg></button>
+  <button data-v="favs" aria-label="دڵخواز"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/></svg></button>
+  <button data-v="prof" aria-label="پڕۆفایل"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.2"/><path d="M3.8 21c.7-4.4 4-6.5 8.2-6.5s7.5 2.1 8.2 6.5z"/></svg></button>
 </nav>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -231,7 +267,7 @@ function doSearch(){var q=$("q").value.trim();
 $("chips").innerHTML=G.map(function(g){return'<div class="chip glass'+(g==cat?" on":"")+'" data-g="'+g+'">'+g+'</div>'}).join("");
 $("chips").onclick=function(e){var g=e.target.dataset.g;if(!g)return;cat=g;[].forEach.call($("chips").children,function(c){c.classList.toggle("on",c.dataset.g==g)});doSearch()};
 $("q").oninput=doSearch;
-function moveInd(){var b=document.querySelector("#nav button.on"),i=$("ind");if(!b)return;i.style.left=b.offsetLeft+"px";i.style.width=b.offsetWidth+"px"}
+function moveInd(){var b=document.querySelector("#nav button.on"),i=$("ind");if(!b)return;var h=i.offsetHeight;i.style.width=h+"px";i.style.left=(b.offsetLeft+(b.offsetWidth-h)/2)+"px"}
 function show(v){[].forEach.call(document.querySelectorAll(".view"),function(x){x.classList.toggle("on",x.id==v)});
  [].forEach.call($("nav").children,function(b){b.classList.toggle("on",b.dataset.v==v)});scrollTo(0,0);moveInd()}
 $("nav").onclick=function(e){var b=e.target.closest("button");if(b)show(b.dataset.v)};
@@ -371,13 +407,13 @@ $("pFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileRe
 var FB={apiKey:"AIzaSyBfStnmfbta_nnFe30hJznDT1T-sr2PUeo",authDomain:"chawtvapp-35202.firebaseapp.com",projectId:"chawtvapp-35202",storageBucket:"chawtvapp-35202.firebasestorage.app",messagingSenderId:"730332846056",appId:"1:730332846056:web:7cc05f9a293f334810765d"},fbOk=false;
 try{if(FB.apiKey&&window.firebase){firebase.initializeApp(FB);fbOk=true}}catch(e){}
 function am(t){$("amsg").textContent=t}
-function setUser(u){$("aform").style.display=u?"none":"block";$("aout").style.display=u?"block":"none";$("aem").textContent=u?u.email:"";$("aEt").textContent=u?u.email:"چوونە ژوورەوە بە ئیمەیڵ"}
-function ad(f){if(!fbOk){am("چوونە ژوورەوە هێشتا چالاک نەکراوە");return}am("");
- f($("ae").value.trim(),$("ap").value).catch(function(){am("هەڵە ڕوویدا: زانیاریەکان بپشکنە (پاسوۆرد لانی کەم ٦ پیت)")})}
+function setUser(u){$("aform").style.display=u?"none":"block";$("aout").style.display=u?"block":"none";$("aem").textContent=u?dn(u.email):"";$("aEt").textContent=u?dn(u.email):"چوونە ژوورەوە / دروستکردنی ئەکاوەنت"}
+function ad(f,c){if(!fbOk){am("چوونە ژوورەوە هێشتا چالاک نەکراوە");return}am("");
+ var em=toEm($("ae").value,c);if(!em)return;f(em,$("ap").value).catch(function(e){am(aerr(e))})}
 $("aItem").onclick=function(){$("aus").classList.add("on")};
 $("abk").onclick=function(){$("aus").classList.remove("on")};
 $("aIn").onclick=function(){ad(function(e,p){return firebase.auth().signInWithEmailAndPassword(e,p)})};
-$("aUp").onclick=function(){ad(function(e,p){return firebase.auth().createUserWithEmailAndPassword(e,p)})};
+$("aUp").onclick=function(){ad(function(e,p){return firebase.auth().createUserWithEmailAndPassword(e,p)},1)};
 $("aRs").onclick=function(){if(!fbOk){am("چوونە ژوورەوە هێشتا چالاک نەکراوە");return}var e=$("ae").value.trim();if(!e){$("ae").focus();return}
  firebase.auth().sendPasswordResetEmail(e).then(function(){am("نامەی گۆڕینی پاسوۆرد نێردرا")}).catch(function(){am("هەڵە ڕوویدا: زانیاریەکان بپشکنە (پاسوۆرد لانی کەم ٦ پیت)")})};
 $("aLo").onclick=function(){if(fbOk)firebase.auth().signOut()};
@@ -430,13 +466,13 @@ $("dPlay").onclick=play;
 var _o2=open_;open_=function(i){stopV();_o2(i)};
 $("bk").addEventListener("click",stopV);
 function loadRemote(sn){remote=[];sn.forEach(function(d){var x=d.data();
- remote.push([x.title||"",cl(x.genre),cl(x.year),cl(x.duration),cl(x.rating),cl(x.lang),x.synopsis||"",x.poster||"",x.video||"",d.id])});
+ remote.push([x.title||"",cl(x.genre),cl(x.year),cl(x.duration),cl(x.rating),cl(x.lang),x.synopsis||"",x.poster||"",x.video||"",d.id,cl(x.type)||"فیلم"])});
  M=remote.length?remote:SM;ids=M.map(function(_,i){return i});render();drawFL()}
 if(fbOk&&firebase.firestore){try{db=firebase.firestore();
  db.collection("films").orderBy("createdAt").onSnapshot(loadRemote,function(){})}catch(e){}}
-$("fG").innerHTML=G.slice(1).map(function(g){return"<option>"+g+"</option>"}).join("");
+$("fG").innerHTML=G.slice(1).map(function(g){return'<option value="'+g+'">'+g+'</option>'}).join("");
 var fImg="";
-function drawFL(){$("fList").innerHTML=remote.length?remote.map(function(m){return'<div class="r2"><span style="color:var(--t)">'+esc(m[0])+'</span><button class="mini" data-fd="'+m[9]+'">🗑</button></div>'}).join(""):'<div class="empty">هێشتا فیلمێک زیاد نەکراوە</div>'}
+function drawFL(){$("fList").innerHTML=remote.length?remote.map(function(m){return'<div class="r2"><span style="color:var(--t)">'+esc(m[0])+' · '+m[10]+'</span><button class="mini" data-fd="'+m[9]+'">🗑</button></div>'}).join(""):'<div class="empty">هێشتا فیلمێک زیاد نەکراوە</div>'}
 drawFL();
 function fm(t){$("fMsg").textContent=t}
 if(fbOk)firebase.auth().onAuthStateChanged(function(u){$("admRow").style.display=(u&&u.email&&u.email.toLowerCase()==ADMIN)?"":"none"});
@@ -452,10 +488,45 @@ $("fSave").onclick=function(){
  var t=$("fT").value.trim();if(!t){$("fT").focus();fm("ناوی فیلم بنووسە");return}
  var b=$("fSave");b.disabled=true;fm("چاوەڕێ بکە...");
  db.collection("films").add({title:t,genre:$("fG").value,year:$("fY").value.trim(),duration:$("fD").value.trim(),rating:$("fR").value.trim(),
-  lang:$("fL").value,synopsis:$("fS").value.trim(),poster:fImg,video:$("fV").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()})
+  type:$("fK").value,lang:$("fL").value,synopsis:$("fS").value.trim(),poster:fImg,video:$("fV").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()})
  .then(function(){b.disabled=false;fm("✓ فیلمەکە زیاد کرا");["fT","fY","fD","fR","fS","fV"].forEach(function(i){$(i).value=""});fImg="";$("fPrev").removeAttribute("src")})
  .catch(function(e){b.disabled=false;fm(e&&e.code=="permission-denied"?"ڕێگەپێدراو نیت. بە ئیمەیڵی بەڕێوەبەر بچۆ ژوورەوە":"هەڵە ڕوویدا، دووبارە هەوڵ بدەوە")})};
 $("fList").onclick=function(e){var id=e.target.dataset.fd;if(id&&db&&confirm("ئەم فیلمە بسڕدرێتەوە؟"))db.collection("films").doc(id).delete().catch(function(){fm("نەسڕایەوە")})};
+
+/* ===== username login, stats, profile background ===== */
+[["فیلم","Films","أفلام","Filmler","فیلم‌ها"],["زنجیرە","Series","مسلسلات","Diziler","سریال‌ها"],
+["چوونە ژوورەوە / دروستکردنی ئەکاوەنت","Sign in / Create account","دخول / إنشاء حساب","Giriş / Hesap oluştur","ورود / ساخت حساب"]
+].forEach(function(r){D[r[0]]={en:r[1],ar:r[2],tr:r[3],fa:r[4]}});
+var DOM="@chawtv.app";
+function dn(e){return e&&e.slice(-DOM.length)==DOM?e.slice(0,-DOM.length):e}
+function toEm(v,create){v=(v||"").trim().toLowerCase();
+ if(v.indexOf("@")>-1){if(create){am("لە ناوەکەدا @ بەکار مەهێنە");return""}return v}
+ if(!/^[a-z0-9._-]{3,20}$/.test(v)){am("ناوی بەکارهێنەر: ٣ تا ٢٠ پیتی ئینگلیزی، ژمارە یان . _ -");return""}
+ return v+DOM}
+function aerr(e){var c=e&&e.code||"";
+ if(c=="auth/email-already-in-use")return"ئەم ناوە پێشتر بەکارهاتووە، ناوێکی تر هەڵبژێرە";
+ if(c=="auth/weak-password")return"پاسوۆرد لانی کەم ٦ پیت بێت";
+ if(c=="auth/invalid-credential"||c=="auth/wrong-password"||c=="auth/user-not-found"||c=="auth/invalid-email")return"ناو یان پاسوۆرد هەڵەیە";
+ if(c=="auth/too-many-requests")return"هەوڵی زۆر دراوە، دواتر هەوڵ بدەوە";
+ return"هەڵە ڕوویدا، دووبارە هەوڵ بدەوە"}
+$("aEye").onclick=function(){var p=$("ap");p.type=p.type=="password"?"text":"password"};
+function kd(n){return String(n).replace(/\d/g,function(d){return"٠١٢٣٤٥٦٧٨٩"[d]})}
+function stats(){var se=M.filter(function(m){return m[10]=="زنجیرە"}).length,fi=M.length-se,k=(LG=="ckb"||LG=="ar"||LG=="fa");
+ var t=(k?kd(fi):fi)+" "+tt("فیلم")+"  ·  "+(k?kd(se):se)+" "+tt("زنجیرە");
+ $("pst").textContent=t;$("hst").textContent=t}
+var _r9=render;render=function(){_r9();stats()};
+var _sl9=setLang;setLang=function(l){_sl9(l);stats()};
+function bgKey(){return"chawBg_"+(curP||"guest")}
+var _rp9=renderProf;renderProf=function(){_rp9();var d="";try{d=localStorage.getItem(bgKey())||""}catch(e){}
+ var b=$("pbg");$("pcov").classList.toggle("hasbg",!!d);$("bgRm").style.display=d?"":"none";
+ if(d){b.className="pbg img";b.style.cssText='background:linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.5)),url("'+d+'") center/cover'}else b.className="pbg"};
+$("bgBtn").onclick=function(){$("bgFile").click()};
+$("bgRm").onclick=function(){try{localStorage.removeItem(bgKey())}catch(e){}renderProf()};
+$("bgFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();
+ r.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=900;c.height=560;var x=c.getContext("2d"),
+  k=Math.max(900/im.width,560/im.height),w=im.width*k,h=im.height*k;x.drawImage(im,(900-w)/2,(560-h)/2,w,h);
+  try{localStorage.setItem(bgKey(),c.toDataURL("image/jpeg",.75))}catch(e){alert("شوێن پڕە")}renderProf()};im.src=r.result};r.readAsDataURL(f);this.value=""};
+renderProf();render();
 
 var sl="ckb";try{sl=localStorage.getItem("chawLang")||"ckb"}catch(e){}if(!LN[sl])sl="ckb";
 ob.observe(document.body,cfg);setLang(sl);
