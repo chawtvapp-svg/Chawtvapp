@@ -17,7 +17,7 @@
 @media (prefers-color-scheme:dark){:root{--bg:#080A12}}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--t);font-family:Tahoma,"Noto Naskh Arabic",system-ui,sans-serif}
-body{min-height:100%;padding-bottom:calc(90px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle at 80% -10%,var(--bg2) 0,transparent 50%),var(--bg)}
+body{min-height:100%;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle at 80% -10%,var(--bg2) 0,transparent 50%),var(--bg)}
 .top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
 .logo{height:44px;width:auto;display:block;filter:drop-shadow(0 2px 8px rgba(0,0,0,.45))}html.light .logo{filter:drop-shadow(0 0 1px rgba(0,0,0,.9)) drop-shadow(0 0 1px rgba(0,0,0,.6))}
 .glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:20px}
@@ -78,7 +78,7 @@ select,textarea{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radi
 .pimgp{width:90px;height:135px;border-radius:12px;object-fit:contain;display:block;margin:8px auto;background:var(--card)}
 
 /* ===== glass nav ===== */
-#nav{position:fixed;inset-inline:18px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;padding:7px;border-radius:36px;max-width:460px;margin-inline:auto;
+#nav{position:fixed;inset-inline:18px;bottom:calc(0px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;padding:7px;border-radius:36px;max-width:460px;margin-inline:auto;
 background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
 backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);
 border:1px solid rgba(255,255,255,.2);
@@ -115,7 +115,7 @@ html.light #nav button{color:rgba(0,0,0,.5)}html.light #nav button.on{color:#fff
 .lgc h2{font-size:26px}.lgc p{color:var(--m);font-size:14px;margin:6px 0 18px}
 .lgc label{display:block;font-size:12px;letter-spacing:1px;color:var(--m);margin:10px 0 6px;font-weight:700}
 .lgc input{width:100%;margin:0 0 6px;padding:16px;border-radius:18px;background:#14141f;color:#fff}
-.pw{position:relative}.pw input{padding-inline-end:52px}.pw button{position:absolute;top:0;bottom:6px;inset-inline-end:10px;background:0;border:0;font-size:20px}
+.pw{position:relative}.pw input{padding-right:52px;padding-left:14px}.pw button{position:absolute;top:0;bottom:6px;right:12px;left:auto;width:36px;background:0;border:0;display:flex;align-items:center;justify-content:center;color:#6b7280;transition:transform .2s,color .2s}.pw button:active{transform:scale(.85)}.pw button.on{color:var(--c1,#7bb33a)}.pw button svg{width:22px;height:22px}
 .lgc .btn{display:block;width:100%;margin:18px 0 0;padding:16px;border-radius:18px;font-size:16px}
 .lgc .btn.out{background:transparent;border:2px solid rgba(var(--rgb),.5);color:var(--glow);box-shadow:none;margin-top:12px}
 html.light .lgc{background:var(--card)}html.light .lgc input{background:#f2f2f7;color:#111}
@@ -148,6 +148,14 @@ html.light .lgc{background:var(--card)}html.light .lgc input{background:#f2f2f7;
 .sq.on{box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--t)}
 .sq.cu{display:flex;align-items:center;justify-content:center;font-size:18px;background:conic-gradient(red,yellow,lime,aqua,blue,magenta,red)}
 .sq.cu input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;border:0;opacity:0}
+
+html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%;touch-action:manipulation}body{overflow-x:hidden}
+#nav{transform:translateZ(0);will-change:transform}
+button,.chip,.card,[class*=card],[class*=mc]{transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,opacity .28s,background .28s}
+button:active,.card:active,[class*=card]:active{transform:scale(.96)}
+@keyframes cin{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.card,[class*=card]{animation:cin .45s cubic-bezier(.2,.8,.2,1) both}
+.vp{contain:layout paint}
 </style>
 </head>
 <body>
@@ -160,6 +168,7 @@ html.light .lgc{background:var(--card)}html.light .lgc input{background:#f2f2f7;
   <h3>نوێی ئەم هەفتەیە</h3><div class="row" id="r2"></div>
   <h3>زۆر بینراوەکان</h3><div class="row" id="r3"></div>
   <h3>فیلمی کوردی</h3><div class="row" id="r4"></div>
+  <div id="gr"></div>
 </div>
 
 <div class="view" id="search">
@@ -202,6 +211,7 @@ html.light .lgc{background:var(--card)}html.light .lgc input{background:#f2f2f7;
   <div class="pad"><button class="btn" id="dPlay">▶ پەخشکردن</button><button class="btn g" id="dFav">♡ دڵخواز</button><button class="btn g" id="dDl">⬇ داگرتن</button>
   <h3 style="margin:20px 0 8px">پوختەی چیرۆک</h3><p id="dD"></p></div>
   <div class="vp" id="vp" style="display:none"></div>
+  <div class="pad" id="pc" style="display:none;gap:8px;align-items:center;justify-content:center;margin-top:-6px"><button class="btn g" id="sb" style="margin:0">⏪ ١٠</button><select id="spd" style="width:auto;margin:0"><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option></select><button class="btn g" id="sf" style="margin:0">١٠ ⏩</button></div>
   <div class="player" id="pl" style="display:none"><button class="play" id="pp">▶</button>
     <div class="ctl"><div class="bar"><i id="pg"></i></div>720p · خێرایی ١x · ژێرنووسی کوردی</div></div>
   <h3>هاوشێوەکان</h3><div class="row" id="sim"></div>
@@ -220,9 +230,12 @@ html.light .lgc{background:var(--card)}html.light .lgc input{background:#f2f2f7;
   <textarea id="fS" rows="4" placeholder="کورتەی چیرۆک"></textarea>
   <img class="pimgp" id="fPrev" alt="">
   <div class="pad" style="text-align:center"><button class="btn g" id="fPb" style="margin:0">📷 پۆستەر لە گەلەری</button><input type="file" id="fPf" accept="image/*" hidden></div>
-  <input id="fV" dir="ltr" placeholder="بەستەری ڤیدیۆ (YouTube / Drive / mp4)">
+  <input id="fV" dir="ltr" placeholder="بەستەری ڤیدیۆ (YouTube / Drive / Vidmoly / mp4)">
   <div class="pad" style="margin-top:14px"><button class="btn" id="fSave">پاشەکەوتکردن</button></div>
   <p id="fMsg" class="empty" style="padding:14px"></p>
+  <h3>ئامار</h3><div class="grp" id="dash"></div>
+  <h3>چاکسازی</h3><div class="grp"><div class="r2">داخستنی ماڵپەڕ<label class="sw"><input type="checkbox" id="mOn"><i></i></label></div></div>
+  <input id="mMsg" placeholder="پەیام بۆ بەکارهێنەران"><div class="pad"><button class="btn g" id="mSave" style="margin:0">پاشەکەوتکردنی پەیام</button></div>
   <h3>فیلمەکانم</h3><div class="grp" id="fList"></div>
 </div>
 
@@ -246,7 +259,7 @@ html.light .lgc{background:var(--card)}html.light .lgc input{background:#f2f2f7;
     <label>ناوی بەکارهێنەر</label>
     <input id="ae" dir="ltr" autocapitalize="none" autocorrect="off" autocomplete="username" placeholder="ahmad">
     <label>پاسوۆرد</label>
-    <div class="pw"><input id="ap" type="password" dir="ltr" autocomplete="current-password" placeholder="••••••"><button type="button" id="aEye">👁</button></div>
+    <div class="pw"><input id="ap" type="password" dir="ltr" autocomplete="current-password" placeholder="••••••"><button type="button" id="aEye"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     <button class="btn" id="aIn">چوونە ژوورەوە</button>
     <button class="btn out" id="aUp">دروستکردنی ئەکاوەنت</button>
     <button id="aRs" hidden></button>
@@ -319,7 +332,7 @@ function open_(i){cur=i;var m=M[i];var pst=m[7];$("cv").style.cssText="";$("cbg"
 document.body.onclick=function(e){var x=e.target.closest(".rx");if(x){toggleRx(+x.dataset.i);return}var c=e.target.closest(".card");if(c){var p=e.target.closest(".pb");open_(+c.dataset.i);if(p)play()}};
 $("bk").onclick=function(){$("det").classList.remove("on");clearInterval(t)};
 var t;
-function play(){$("pl").style.display="flex";$("pl").scrollIntoView({behavior:"smooth",block:"center"})}
+function play(){$("pl").style.display="flex";0}
 $("dPlay").onclick=play;$("hPlay").onclick=function(e){e.stopPropagation();open_(heroI);play()};
 $("pp").onclick=function(){var on=$("pp").textContent=="▶";$("pp").textContent=on?"❚❚":"▶";clearInterval(t);
  if(on){var w=parseFloat($("pg").style.width)||0;t=setInterval(function(){w=Math.min(100,w+1);$("pg").style.width=w+"%"},300)}};
@@ -503,14 +516,15 @@ renderProf();render();
 var ADMIN="chawtvapp@gmail.com",SM=M,db=null,remote=[];
 function cl(x){return String(x==null?"":x).replace(/[<>&"]/g,"")}
 function ytId(u){var m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:""}
-function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/);
+function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/),vm=u.match(/vidmoly\.[a-z]+\/(?:embed-|w\/)?([\w-]+)/);
  if(y)return'<iframe src="https://www.youtube-nocookie.com/embed/'+y+'?playsinline=1&autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
  if(g)return'<iframe src="https://drive.google.com/file/d/'+g[1]+'/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+ if(vm)return'<iframe src="https://vidmoly.net/embed-'+vm[1]+'.html" allow="autoplay; fullscreen" allowfullscreen></iframe>';
  if(a)return'<iframe src="https://archive.org/embed/'+a[1]+'" allowfullscreen></iframe>';
  return'<video controls autoplay playsinline src="'+cl(u)+'"></video>'}
 function stopV(){$("vp").innerHTML="";$("vp").style.display="none"}
 var _pl=play;play=function(){var u=M[cur]&&M[cur][8];countView(M[cur]&&M[cur][9]);
- if(u){$("pl").style.display="none";$("vp").innerHTML=embed(u);$("vp").style.display="block";$("vp").scrollIntoView({behavior:"smooth",block:"center"})}
+ if(u){$("pl").style.display="none";$("vp").innerHTML=embed(u);$("vp").style.display="block";0}
  else{stopV();_pl()}};
 $("dPlay").onclick=play;
 var _o2=open_;open_=function(i){stopV();_o2(i)};
@@ -521,8 +535,9 @@ function loadRemote(sn){remote=[];sn.forEach(function(d){var x=d.data();
 if(fbOk&&firebase.firestore){try{db=firebase.firestore();
  db.collection("films").orderBy("createdAt").onSnapshot(loadRemote,function(){})}catch(e){}}
 $("fG").innerHTML=G.slice(1).map(function(g){return'<option value="'+g+'">'+g+'</option>'}).join("");
-var fImg="";
-function drawFL(){$("fList").innerHTML=remote.length?remote.map(function(m){return'<div class="r2"><span style="color:var(--t)">'+esc(m[0])+' · '+m[10]+'</span><button class="mini" data-fd="'+m[9]+'">🗑</button></div>'}).join(""):'<div class="empty">هێشتا فیلمێک زیاد نەکراوە</div>'}
+var fImg="",editId="",fLbl="";
+function fSv(o){if(!editId)return db.collection("films").add(o);delete o.createdAt;if(!o.poster)delete o.poster;return db.collection("films").doc(editId).update(o)}
+function drawFL(){$("fList").innerHTML=remote.length?remote.map(function(m){return'<div class="r2"><span style="color:var(--t)">'+esc(m[0])+' · '+m[10]+'</span><span><button class="mini" data-fe="'+m[9]+'">✏️</button> <button class="mini" data-fd="'+m[9]+'">🗑</button></span></div>'}).join(""):'<div class="empty">هێشتا فیلمێک زیاد نەکراوە</div>'}
 drawFL();
 function fm(t){$("fMsg").textContent=t}
 if(fbOk)firebase.auth().onAuthStateChanged(function(u){$("admRow").style.display=(u&&u.email&&u.email.toLowerCase()==ADMIN)?"":"none"});
@@ -535,11 +550,12 @@ $("fSave").onclick=function(){
  if(!db){fm("هێشتا Firestore چالاک نەبووە");return}
  var t=$("fT").value.trim();if(!t){$("fT").focus();fm("ناوی فیلم بنووسە");return}
  var b=$("fSave");b.disabled=true;fm("چاوەڕێ بکە...");
- db.collection("films").add({title:t,genre:$("fG").value,year:$("fY").value.trim(),duration:$("fD").value.trim(),rating:$("fR").value.trim(),rt:$("fRt").value.trim(),mc:$("fMc").value.trim(),
+ fSv({title:t,genre:$("fG").value,year:$("fY").value.trim(),duration:$("fD").value.trim(),rating:$("fR").value.trim(),rt:$("fRt").value.trim(),mc:$("fMc").value.trim(),
   type:$("fK").value,lang:$("fL").value,synopsis:$("fS").value.trim(),poster:fImg,video:$("fV").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()})
- .then(function(){b.disabled=false;fm("✓ فیلمەکە زیاد کرا");["fT","fY","fD","fR","fRt","fMc","fS","fV"].forEach(function(i){$(i).value=""});fImg="";$("fPrev").removeAttribute("src")})
+ .then(function(){b.disabled=false;fm(editId?"✓ گۆڕانکارییەکان پاشەکەوت کران":"✓ فیلمەکە زیاد کرا");editId="";$("fSave").textContent=fLbl;["fT","fY","fD","fR","fRt","fMc","fS","fV"].forEach(function(i){$(i).value=""});fImg="";$("fPrev").removeAttribute("src")})
  .catch(function(e){b.disabled=false;fm(e&&e.code=="permission-denied"?"ڕێگەپێدراو نیت. بە ئیمەیڵی بەڕێوەبەر بچۆ ژوورەوە":"هەڵە ڕوویدا، دووبارە هەوڵ بدەوە")})};
-$("fList").onclick=function(e){var id=e.target.dataset.fd;if(id&&db&&confirm("ئەم فیلمە بسڕدرێتەوە؟"))db.collection("films").doc(id).delete().catch(function(){fm("نەسڕایەوە")})};
+$("fList").onclick=function(e){var ed=e.target.dataset.fe;if(ed){var m=remote.filter(function(r){return r[9]==ed})[0];if(m){editId=ed;if(!fLbl)fLbl=$("fSave").textContent;$("fSave").textContent="💾 پاشەکەوتکردنی گۆڕانکاری";$("fT").value=m[0];$("fG").value=m[1];$("fY").value=m[2];$("fD").value=m[3];$("fR").value=m[4];$("fL").value=m[5];$("fS").value=m[6];$("fV").value=m[8];$("fK").value=m[10];$("fRt").value=m[11];$("fMc").value=m[12];fImg="";if(m[7])$("fPrev").src=m[7];$("fT").scrollIntoView({block:"center"});fm("دەستکاری: "+m[0]+" — پۆستەر نەگۆڕدرێت ئەگەر وێنەی نوێ هەڵنەبژێریت")}return}
+var id=e.target.dataset.fd;if(id&&db&&confirm("ئەم فیلمە بسڕدرێتەوە؟"))db.collection("films").doc(id).delete().catch(function(){fm("نەسڕایەوە")})};
 
 /* ===== viewers + reactions ===== */
 D["بینەر"]={en:"Viewers",ar:"مشاهدون",tr:"İzleyici",fa:"بیننده"};D["ڕەنگی ئەپەکە"]={en:"App colour",ar:"لون التطبيق",tr:"Uygulama rengi",fa:"رنگ برنامه"};
@@ -569,7 +585,7 @@ function aerr(e){var c=e&&e.code||"";
  if(c=="auth/invalid-credential"||c=="auth/wrong-password"||c=="auth/user-not-found"||c=="auth/invalid-email")return"ناو یان پاسوۆرد هەڵەیە";
  if(c=="auth/too-many-requests")return"هەوڵی زۆر دراوە، دواتر هەوڵ بدەوە";
  return"هەڵە ڕوویدا، دووبارە هەوڵ بدەوە"}
-$("aEye").onclick=function(){var p=$("ap");p.type=p.type=="password"?"text":"password"};
+$("aEye").onclick=function(){var p=$("ap");p.type=p.type=="password"?"text":"password";this.classList.toggle("on",p.type=="text")};
 function kd(n){return String(n).replace(/\d/g,function(d){return"٠١٢٣٤٥٦٧٨٩"[d]})}
 function stats(){var se=M.filter(function(m){return m[10]=="زنجیرە"}).length,fi=M.length-se,k=(LG=="ckb"||LG=="ar"||LG=="fa");
  var t=(k?kd(fi):fi)+" "+tt("فیلم")+"  ·  "+(k?kd(se):se)+" "+tt("زنجیرە");
@@ -630,6 +646,75 @@ firebase.auth().onAuthStateChanged(function(u){
  else if(cu){var was=cu;cu=null;
   if(localStorage.getItem("chawDirty")!=was.uid){quiet=true;wipe();quiet=false;P=[];curP="";fav={};dl={};renderProf();renderPL();render()}}
 });
+})();
+</script>
+<script>
+/* ===== v3 ===== */
+(function(){
+var PC={k:"",el:null,i:-1,t:0,d:0,last:0,done:0};
+function fid(i){var m=M[i];return m?(m[9]||m[0]):""}
+function pk(){return"chawProg_"+(curP||"guest")}
+function gp(){try{return JSON.parse(localStorage.getItem(pk()))||{}}catch(e){return{}}}
+function sp(){var id=fid(PC.i);if(!id||PC.t<3)return;var o=gp();o[id]={t:Math.floor(PC.t),d:Math.floor(PC.d),u:Date.now()};try{localStorage.setItem(pk(),JSON.stringify(o))}catch(e){}}
+function tick(){var n=Date.now();if(n-PC.last>10000){PC.last=n;sp();fillCont()}}
+function yc(f,a){var x=$("ytf");if(x&&x.contentWindow)x.contentWindow.postMessage(JSON.stringify({event:"command",func:f,args:a||[]}),"*")}
+function seek(d){var t=Math.max(0,PC.t+d);if(PC.el)PC.el.currentTime=t;else yc("seekTo",[t,true]);PC.t=t}
+function nextAuto(){if(PC.done)return;PC.done=1;var id=fid(PC.i),o=gp();delete o[id];try{localStorage.setItem(pk(),JSON.stringify(o))}catch(e){}
+ PC.t=0;fillCont();if(!st.auto)return;var ty=M[PC.i][10],n=-1;
+ for(var j=1;j<M.length;j++){var k=(PC.i+j)%M.length;if(M[k][10]==ty){n=k;break}}
+ if(n>-1){open_(n);play()}}
+var _em=embed;
+embed=function(u,s){u=(u||"").trim();var y=ytId(u);
+ if(y){PC.k="yt";return'<iframe id="ytf" src="https://www.youtube-nocookie.com/embed/'+y+'?playsinline=1&autoplay=1&enablejsapi=1&start='+(s|0)+'&origin='+encodeURIComponent(location.origin)+'" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>'}
+ var h=_em(u);PC.k=/^<video/.test(h)?"v":"";return h};
+play=function(){var m=M[cur];if(!m)return;var u=m[8];countView(m[9]);
+ if(!u){PC.k="";$("pc").style.display="none";stopV();return _pl()}
+ var pr=gp()[fid(cur)],s=pr&&pr.t>5&&(!pr.d||pr.t<pr.d-30)?pr.t:0;
+ PC.i=cur;PC.t=s;PC.d=0;PC.last=0;PC.done=0;PC.el=null;
+ $("pl").style.display="none";$("vp").innerHTML=embed(u,s);$("vp").style.display="block";
+ var v=$("vp").querySelector("video");
+ if(v){PC.el=v;if(s)v.addEventListener("loadedmetadata",function(){v.currentTime=s},{once:true});
+  v.ontimeupdate=function(){PC.t=v.currentTime;PC.d=v.duration||0;tick()};v.onended=nextAuto}
+ var f=$("ytf");if(f)f.onload=function(){f.contentWindow.postMessage(JSON.stringify({event:"listening",id:1,channel:"widget"}),"*")};
+ $("pc").style.display=PC.k?"flex":"none";$("spd").value="1";
+ 0};
+$("dPlay").onclick=play;
+addEventListener("message",function(e){if(PC.k!="yt"||String(e.origin).indexOf("youtube")<0)return;var d;try{d=JSON.parse(e.data)}catch(x){return}
+ if(d.event=="infoDelivery"&&d.info){var n=d.info;if(n.currentTime!=null)PC.t=n.currentTime;if(n.duration)PC.d=n.duration;tick();if(n.playerState===0)nextAuto()}});
+$("sb").onclick=function(){seek(-10)};$("sf").onclick=function(){seek(10)};
+$("spd").onchange=function(){var r=+this.value;if(PC.el)PC.el.playbackRate=r;else yc("setPlaybackRate",[r])};
+var _o3=open_;open_=function(i){sp();PC.k="";PC.el=null;$("pc").style.display="none";_o3(i)};
+$("bk").addEventListener("click",function(){sp();PC.k="";PC.el=null;$("pc").style.display="none";fillCont()});
+function fillCont(){var o=gp(),l=ids.filter(function(i){var p=o[fid(i)];return p&&p.t>5}).sort(function(a,b){return o[fid(b)].u-o[fid(a)].u}).slice(0,8);
+ $("r1").innerHTML=l.length?l.map(card).join(""):'<div class="empty" style="width:100%">هێشتا شتێکت نەبینیوە</div>'}
+function fillGr(){var h="",du=ids.filter(function(i){return M[i][5]=="دۆبلاژکراو"});
+ if(du.length)h+='<h3>دۆبلاژی کوردی</h3><div class="row">'+du.map(card).join("")+'</div>';
+ G.slice(1).forEach(function(g){var l=ids.filter(function(i){return M[i][1]==g});if(l.length)h+='<h3>'+g+'</h3><div class="row">'+l.map(card).join("")+'</div>'});
+ $("gr").innerHTML=h}
+var _r3=render;render=function(){_r3();fillCont();fillGr()};
+/* smart Kurdish search */
+function nz(s){return String(s||"").toLowerCase().replace(/[\u064B-\u065F\u0640]/g,"").replace(/[كک]/g,"ک").replace(/[يىێی]/g,"ی").replace(/[هە]/g,"ه").replace(/[ۆو]/g,"و").replace(/[ڕر]/g,"ر").replace(/[ڵل]/g,"ل").replace(/[٠-٩۰-۹]/g,function(d){var c=d.charCodeAt(0);return c>1775?c-1776:c-1632})}
+doSearch=function(){var q=nz($("q").value.trim());
+ fill("grid",ids.filter(function(i){var m=M[i];return(cat=="هەموو"||m[1]==cat)&&(!q||nz([m[0],m[1],m[2],m[5],m[6]].join(" ")).indexOf(q)>-1)}))};
+$("q").oninput=doSearch;
+/* admin: stats + maintenance */
+function dash(){var vs=0,rs=0,t=[];for(var k in VW){vs+=VW[k].n||0;rs+=VW[k].r||0;t.push([VW[k].n||0,k])}
+ t.sort(function(a,b){return b[0]-a[0]});
+ var top=t.slice(0,3).map(function(x){var f=M.filter(function(m){return m[9]==x[1]})[0];return f?esc(f[0])+" ("+x[0]+")":""}).filter(Boolean).join("، ")||"—";
+ $("dash").innerHTML='<div class="r2">فیلم و زنجیرە<span>'+M.length+'</span></div><div class="r2">کۆی بینین<span>'+vs+'</span></div><div class="r2">کۆی ❤️<span>'+rs+'</span></div><div class="r2">بەکارهێنەر<span id="dU">…</span></div><div class="r2">زۆرترین بینراو<span>'+top+'</span></div>';
+ if(db)db.collection("members").get().then(function(q){$("dU").textContent=q.size}).catch(function(){$("dU").textContent="—"})}
+var _ar=$("admRow").onclick;$("admRow").onclick=function(){_ar();dash()};
+if(fbOk&&db)firebase.auth().onAuthStateChanged(function(u){if(u)db.collection("members").doc(u.uid).set({t:Date.now()},{merge:true}).catch(function(){})});
+var mt=document.createElement("div"),cm={on:false,msg:""};
+mt.style.cssText="position:fixed;inset:0;z-index:8;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px";
+mt.innerHTML='<div style="font-size:54px">🛠</div><h2 style="margin:14px 0">ماڵپەڕەکە لە چاکسازیدایە</h2><p id="mtm" style="color:var(--m);line-height:1.9"></p><button class="btn g" id="mtl" style="margin-top:22px">چوونە ژوورەوەی بەڕێوەبەر</button>';
+document.body.appendChild(mt);$("mtl").onclick=function(){$("aus").classList.add("on")};
+function mtShow(){var u=fbOk&&firebase.auth().currentUser,ad=u&&u.email&&u.email.toLowerCase()==ADMIN;mt.style.display=(cm.on&&!ad)?"flex":"none";$("mtm").textContent=cm.msg||"زوو دەگەڕێینەوە."}
+if(db)db.collection("config").doc("site").onSnapshot(function(d){var x=d.exists?d.data():{};cm.on=!!x.maint;cm.msg=x.msg||"";$("mOn").checked=cm.on;$("mMsg").value=cm.msg;mtShow()},function(){});
+if(fbOk)firebase.auth().onAuthStateChanged(mtShow);
+function setM(){if(db)db.collection("config").doc("site").set({maint:$("mOn").checked,msg:$("mMsg").value.trim()}).then(function(){fm("✓")}).catch(function(){fm("ڕێساکانی Firestore نوێ بکەرەوە")})}
+$("mOn").onchange=setM;$("mSave").onclick=setM;
+render();
 })();
 </script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js?v=2').catch(function(){});});}</script>
