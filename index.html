@@ -231,6 +231,7 @@ button:active,.card:active,[class*=card]:active{transform:scale(.96)}
   <img class="pimgp" id="fPrev" alt="">
   <div class="pad" style="text-align:center"><button class="btn g" id="fPb" style="margin:0">📷 پۆستەر لە گەلەری</button><input type="file" id="fPf" accept="image/*" hidden></div>
   <input id="fV" dir="ltr" placeholder="بەستەری ڤیدیۆ (YouTube / Drive / Vidmoly / mp4)">
+  <input id="fV2" dir="ltr" placeholder="بەستەری دووەم (Vidmoly - ئارەزووماندانە)">
   <div class="pad" style="margin-top:14px"><button class="btn" id="fSave">پاشەکەوتکردن</button></div>
   <p id="fMsg" class="empty" style="padding:14px"></p>
   <h3>ئامار</h3><div class="grp" id="dash"></div>
@@ -516,10 +517,10 @@ renderProf();render();
 var ADMIN="chawtvapp@gmail.com",SM=M,db=null,remote=[];
 function cl(x){return String(x==null?"":x).replace(/[<>&"]/g,"")}
 function ytId(u){var m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:""}
-function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/),vm=u.match(/vidmoly\.[a-z]+\/(?:embed-|w\/)?([\w-]+)/);
+function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/),vm=u.match(/vidmoly\.([a-z]+)\/(?:embed-|w\/|v\/)?([\w-]+)/);
  if(y)return'<iframe src="https://www.youtube-nocookie.com/embed/'+y+'?playsinline=1&autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
  if(g)return'<iframe src="https://drive.google.com/file/d/'+g[1]+'/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>';
- if(vm)return'<iframe src="https://vidmoly.net/embed-'+vm[1]+'.html" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+ if(vm)return'<iframe src="https://vidmoly.'+vm[1]+'/embed-'+vm[2]+'.html" allow="autoplay; fullscreen" allowfullscreen referrerpolicy="no-referrer"></iframe>';
  if(a)return'<iframe src="https://archive.org/embed/'+a[1]+'" allowfullscreen></iframe>';
  return'<video controls autoplay playsinline src="'+cl(u)+'"></video>'}
 function stopV(){$("vp").innerHTML="";$("vp").style.display="none"}
@@ -530,7 +531,7 @@ $("dPlay").onclick=play;
 var _o2=open_;open_=function(i){stopV();_o2(i)};
 $("bk").addEventListener("click",stopV);
 function loadRemote(sn){remote=[];sn.forEach(function(d){var x=d.data();
- remote.push([x.title||"",cl(x.genre),cl(x.year),cl(x.duration),cl(x.rating),cl(x.lang),x.synopsis||"",x.poster||"",x.video||"",d.id,cl(x.type)||"فیلم",cl(x.rt),cl(x.mc)])});
+ remote.push([x.title||"",cl(x.genre),cl(x.year),cl(x.duration),cl(x.rating),cl(x.lang),x.synopsis||"",x.poster||"",x.video||"",d.id,cl(x.type)||"فیلم",cl(x.rt),cl(x.mc),x.video2||""])});
  M=remote.length?remote:SM;ids=M.map(function(_,i){return i});render();drawFL()}
 if(fbOk&&firebase.firestore){try{db=firebase.firestore();
  db.collection("films").orderBy("createdAt").onSnapshot(loadRemote,function(){})}catch(e){}}
@@ -551,10 +552,10 @@ $("fSave").onclick=function(){
  var t=$("fT").value.trim();if(!t){$("fT").focus();fm("ناوی فیلم بنووسە");return}
  var b=$("fSave");b.disabled=true;fm("چاوەڕێ بکە...");
  fSv({title:t,genre:$("fG").value,year:$("fY").value.trim(),duration:$("fD").value.trim(),rating:$("fR").value.trim(),rt:$("fRt").value.trim(),mc:$("fMc").value.trim(),
-  type:$("fK").value,lang:$("fL").value,synopsis:$("fS").value.trim(),poster:fImg,video:$("fV").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()})
- .then(function(){b.disabled=false;fm(editId?"✓ گۆڕانکارییەکان پاشەکەوت کران":"✓ فیلمەکە زیاد کرا");editId="";$("fSave").textContent=fLbl;["fT","fY","fD","fR","fRt","fMc","fS","fV"].forEach(function(i){$(i).value=""});fImg="";$("fPrev").removeAttribute("src")})
+  type:$("fK").value,lang:$("fL").value,synopsis:$("fS").value.trim(),poster:fImg,video:$("fV").value.trim(),video2:$("fV2").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()})
+ .then(function(){b.disabled=false;fm(editId?"✓ گۆڕانکارییەکان پاشەکەوت کران":"✓ فیلمەکە زیاد کرا");editId="";$("fSave").textContent=fLbl;["fT","fY","fD","fR","fRt","fMc","fS","fV","fV2"].forEach(function(i){$(i).value=""});fImg="";$("fPrev").removeAttribute("src")})
  .catch(function(e){b.disabled=false;fm(e&&e.code=="permission-denied"?"ڕێگەپێدراو نیت. بە ئیمەیڵی بەڕێوەبەر بچۆ ژوورەوە":"هەڵە ڕوویدا، دووبارە هەوڵ بدەوە")})};
-$("fList").onclick=function(e){var ed=e.target.dataset.fe;if(ed){var m=remote.filter(function(r){return r[9]==ed})[0];if(m){editId=ed;if(!fLbl)fLbl=$("fSave").textContent;$("fSave").textContent="💾 پاشەکەوتکردنی گۆڕانکاری";$("fT").value=m[0];$("fG").value=m[1];$("fY").value=m[2];$("fD").value=m[3];$("fR").value=m[4];$("fL").value=m[5];$("fS").value=m[6];$("fV").value=m[8];$("fK").value=m[10];$("fRt").value=m[11];$("fMc").value=m[12];fImg="";if(m[7])$("fPrev").src=m[7];$("fT").scrollIntoView({block:"center"});fm("دەستکاری: "+m[0]+" — پۆستەر نەگۆڕدرێت ئەگەر وێنەی نوێ هەڵنەبژێریت")}return}
+$("fList").onclick=function(e){var ed=e.target.dataset.fe;if(ed){var m=remote.filter(function(r){return r[9]==ed})[0];if(m){editId=ed;if(!fLbl)fLbl=$("fSave").textContent;$("fSave").textContent="💾 پاشەکەوتکردنی گۆڕانکاری";$("fT").value=m[0];$("fG").value=m[1];$("fY").value=m[2];$("fD").value=m[3];$("fR").value=m[4];$("fL").value=m[5];$("fS").value=m[6];$("fV").value=m[8];$("fV2").value=m[13]||"";$("fK").value=m[10];$("fRt").value=m[11];$("fMc").value=m[12];fImg="";if(m[7])$("fPrev").src=m[7];$("fT").scrollIntoView({block:"center"});fm("دەستکاری: "+m[0]+" — پۆستەر نەگۆڕدرێت ئەگەر وێنەی نوێ هەڵنەبژێریت")}return}
 var id=e.target.dataset.fd;if(id&&db&&confirm("ئەم فیلمە بسڕدرێتەوە؟"))db.collection("films").doc(id).delete().catch(function(){fm("نەسڕایەوە")})};
 
 /* ===== viewers + reactions ===== */
@@ -676,7 +677,7 @@ play=function(){var m=M[cur];if(!m)return;var u=m[8];countView(m[9]);
  if(v){PC.el=v;if(s)v.addEventListener("loadedmetadata",function(){v.currentTime=s},{once:true});
   v.ontimeupdate=function(){PC.t=v.currentTime;PC.d=v.duration||0;tick()};v.onended=nextAuto}
  var f=$("ytf");if(f)f.onload=function(){f.contentWindow.postMessage(JSON.stringify({event:"listening",id:1,channel:"widget"}),"*")};
- $("pc").style.display=PC.k?"flex":"none";$("spd").value="1";
+ $("pc").style.display=PC.k?"flex":"none";$("spd").value="1";srvBtn(m);
  0};
 $("dPlay").onclick=play;
 addEventListener("message",function(e){if(PC.k!="yt"||String(e.origin).indexOf("youtube")<0)return;var d;try{d=JSON.parse(e.data)}catch(x){return}
@@ -718,5 +719,13 @@ render();
 })();
 </script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js?v=2').catch(function(){});});}</script>
+<script>
+function srvBtn(m){var o=document.getElementById("srvB");if(o)o.remove();
+ if(!m||!m[13]||!m[8])return;var vp=document.getElementById("vp"),b=document.createElement("button"),L1="🔄 سێرڤەری دووەم (ئەگەر ڤیدیۆ نەکرایەوە)",two=false;
+ b.id="srvB";b.className="btn g";b.style.cssText="margin:0 16px 10px;width:calc(100% - 32px)";b.textContent=L1;
+ b.onclick=function(){two=!two;vp.innerHTML=embed(two?m[13]:m[8]);b.textContent=two?"🔄 سێرڤەری یەکەم":L1};
+ vp.insertAdjacentElement("afterend",b)}
+document.getElementById("bk").addEventListener("click",function(){var o=document.getElementById("srvB");if(o)o.remove()});
+</script>
 </body>
 </html>
