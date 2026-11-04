@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>چاو تیڤی</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="theme-color" content="#080A12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="چاو تیڤی">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 :root{--bg:#080A12;--glass:rgba(255,255,255,.10);--line:rgba(255,255,255,.16);--p:#E0A93B;--glow:#F2CC7A;--rgb:224,169,59;--rgb2:242,204,122;--bg2:#433212;--on:#1a1205;--t:#F8FAFC;--m:#a9b0c4;--card:#1c1c1e;--sep:#38383a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 @media (prefers-color-scheme:dark){:root{--bg:#080A12}}
@@ -624,5 +632,6 @@ firebase.auth().onAuthStateChanged(function(u){
 });
 })();
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body>
 </html>
