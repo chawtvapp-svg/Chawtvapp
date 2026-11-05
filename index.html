@@ -51,6 +51,7 @@ input{width:calc(100% - 32px);margin:8px 16px;padding:14px;border-radius:16px;bo
 .item{display:flex;justify-content:space-between;align-items:center;margin:10px 16px;padding:16px;font-size:15px}
 .av{width:84px;height:84px;border-radius:50%;margin:10px auto;background:linear-gradient(135deg,var(--p),#ec4899);display:flex;align-items:center;justify-content:center;font-size:34px}
 .pimg{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}.item b .pimg{width:40px;height:40px}
+.cmi{background:var(--card);border-radius:16px;padding:10px 14px;margin:8px 0;font-size:14px}.cmi b{color:var(--p);font-size:13px}.cmi small{color:var(--m);margin-inline-start:8px}.cmi p{margin:4px 0 0;color:var(--t);line-height:1.7;word-break:break-word}.cmi .mini{font-size:14px;float:left;padding:0}
 .mini{background:0;border:0;color:#fff;font-size:18px;padding:6px 8px}
 #pe{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px}.eo{font-size:28px;padding:8px;border-radius:16px;border:1px solid transparent}.eo.on{background:var(--glass);border-color:var(--glow)}
 .empty{text-align:center;color:var(--m);padding:40px}
@@ -211,9 +212,11 @@ button:active,.card:active,[class*=card]:active{transform:scale(.96)}
   <div class="pad"><button class="btn" id="dPlay">▶ پەخشکردن</button><button class="btn g" id="dFav">♡ دڵخواز</button><button class="btn g" id="dDl">⬇ داگرتن</button>
   <h3 style="margin:20px 0 8px">پوختەی چیرۆک</h3><p id="dD"></p></div>
   <div class="vp" id="vp" style="display:none"></div>
+  <div class="pad" id="srv" style="display:none;gap:8px;justify-content:center;margin:8px 0"><button class="btn g" id="s1" style="margin:0">سێرڤەری ١</button><button class="btn g" id="s2" style="margin:0">سێرڤەری ٢</button></div>
   <div class="pad" id="pc" style="display:none;gap:8px;align-items:center;justify-content:center;margin-top:-6px"><button class="btn g" id="sb" style="margin:0">⏪ ١٠</button><select id="spd" style="width:auto;margin:0"><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option></select><button class="btn g" id="sf" style="margin:0">١٠ ⏩</button></div>
   <div class="player" id="pl" style="display:none"><button class="play" id="pp">▶</button>
     <div class="ctl"><div class="bar"><i id="pg"></i></div>720p · خێرایی ١x · ژێرنووسی کوردی</div></div>
+  <div class="pad" id="cmx"><h3 style="margin:20px 0 8px">کۆمێنتەکان</h3><div id="cml"></div><textarea id="cmt" rows="2" maxlength="300" placeholder="کۆمێنتێک بنووسە..."></textarea><button class="btn" id="cmb" style="margin:8px 0 0">ناردن</button></div>
   <h3>هاوشێوەکان</h3><div class="row" id="sim"></div>
 </div>
 
@@ -230,8 +233,8 @@ button:active,.card:active,[class*=card]:active{transform:scale(.96)}
   <textarea id="fS" rows="4" placeholder="کورتەی چیرۆک"></textarea>
   <img class="pimgp" id="fPrev" alt="">
   <div class="pad" style="text-align:center"><button class="btn g" id="fPb" style="margin:0">📷 پۆستەر لە گەلەری</button><input type="file" id="fPf" accept="image/*" hidden></div>
-  <input id="fV" dir="ltr" placeholder="بەستەری ڤیدیۆ (YouTube / Drive / Vidmoly / mp4)">
-  <input id="fV2" dir="ltr" placeholder="بەستەری دووەم (Vidmoly - ئارەزووماندانە)">
+  <input id="fV" dir="ltr" placeholder="بەستەری ڤیدیۆ (YouTube / Drive / Vidmoly / StreamSB / mp4)">
+  <input id="fV2" dir="ltr" placeholder="بەستەری دووەم — StreamSB (ئارەزوومەندانە)">
   <div class="pad" style="margin-top:14px"><button class="btn" id="fSave">پاشەکەوتکردن</button></div>
   <p id="fMsg" class="empty" style="padding:14px"></p>
   <h3>ئامار</h3><div class="grp" id="dash"></div>
@@ -517,10 +520,10 @@ renderProf();render();
 var ADMIN="chawtvapp@gmail.com",SM=M,db=null,remote=[];
 function cl(x){return String(x==null?"":x).replace(/[<>&"]/g,"")}
 function ytId(u){var m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:""}
-function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/),vm=u.match(/vidmoly\.([a-z]+)\/(?:embed-|w\/|v\/)?([\w-]+)/);
+function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/),vm=u.match(/vidmoly\.[a-z]+\/(?:embed-|w\/)?([\w-]+)/);
  if(y)return'<iframe src="https://www.youtube-nocookie.com/embed/'+y+'?playsinline=1&autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
  if(g)return'<iframe src="https://drive.google.com/file/d/'+g[1]+'/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>';
- if(vm)return'<iframe src="https://vidmoly.'+vm[1]+'/embed-'+vm[2]+'.html" allow="autoplay; fullscreen" allowfullscreen referrerpolicy="no-referrer"></iframe>';
+ if(vm)return'<iframe src="https://vidmoly.net/embed-'+vm[1]+'.html" allow="autoplay; fullscreen" allowfullscreen></iframe>';
  if(a)return'<iframe src="https://archive.org/embed/'+a[1]+'" allowfullscreen></iframe>';
  return'<video controls autoplay playsinline src="'+cl(u)+'"></video>'}
 function stopV(){$("vp").innerHTML="";$("vp").style.display="none"}
@@ -664,8 +667,11 @@ function nextAuto(){if(PC.done)return;PC.done=1;var id=fid(PC.i),o=gp();delete o
  PC.t=0;fillCont();if(!st.auto)return;var ty=M[PC.i][10],n=-1;
  for(var j=1;j<M.length;j++){var k=(PC.i+j)%M.length;if(M[k][10]==ty){n=k;break}}
  if(n>-1){open_(n);play()}}
+var SBRE=/^https?:\/\/((?:[\w-]+\.)*(?:streamsb|sbembed\d*|sbplay\d*|sbfull|sbfast|sbchill|sbspeed|embedsb|watchsb|playersb|tubesb|cloudemb|lvturbo|sblona)\.[a-z]+)\/(?:e\/|embed-|play\/|d\/|v\/)?([\w-]{8,})/i;
 var _em=embed;
 embed=function(u,s){u=(u||"").trim();var y=ytId(u);
+ var fr=u.match(/<iframe[^>]+src=["'](https:\/\/[^"']+)/i);if(!y&&fr){PC.k="";return'<iframe src="'+esc(fr[1])+'" allow="autoplay; fullscreen" allowfullscreen></iframe>'}
+ var sb=u.match(SBRE);if(sb){PC.k="";return'<iframe src="https://'+sb[1]+'/e/'+sb[2]+'.html" allow="autoplay; fullscreen" allowfullscreen></iframe>'}
  if(y){PC.k="yt";return'<iframe id="ytf" src="https://www.youtube-nocookie.com/embed/'+y+'?playsinline=1&autoplay=1&enablejsapi=1&start='+(s|0)+'&origin='+encodeURIComponent(location.origin)+'" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>'}
  var h=_em(u);PC.k=/^<video/.test(h)?"v":"";return h};
 play=function(){var m=M[cur];if(!m)return;var u=m[8];countView(m[9]);
@@ -677,7 +683,7 @@ play=function(){var m=M[cur];if(!m)return;var u=m[8];countView(m[9]);
  if(v){PC.el=v;if(s)v.addEventListener("loadedmetadata",function(){v.currentTime=s},{once:true});
   v.ontimeupdate=function(){PC.t=v.currentTime;PC.d=v.duration||0;tick()};v.onended=nextAuto}
  var f=$("ytf");if(f)f.onload=function(){f.contentWindow.postMessage(JSON.stringify({event:"listening",id:1,channel:"widget"}),"*")};
- $("pc").style.display=PC.k?"flex":"none";$("spd").value="1";srvBtn(m);
+ $("pc").style.display=PC.k?"flex":"none";$("spd").value="1";
  0};
 $("dPlay").onclick=play;
 addEventListener("message",function(e){if(PC.k!="yt"||String(e.origin).indexOf("youtube")<0)return;var d;try{d=JSON.parse(e.data)}catch(x){return}
@@ -718,14 +724,30 @@ $("mOn").onchange=setM;$("mSave").onclick=setM;
 render();
 })();
 </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js?v=2').catch(function(){});});}</script>
-<script>
-function srvBtn(m){var o=document.getElementById("srvB");if(o)o.remove();
- if(!m||!m[13]||!m[8])return;var vp=document.getElementById("vp"),b=document.createElement("button"),L1="🔄 سێرڤەری دووەم (ئەگەر ڤیدیۆ نەکرایەوە)",two=false;
- b.id="srvB";b.className="btn g";b.style.cssText="margin:0 16px 10px;width:calc(100% - 32px)";b.textContent=L1;
- b.onclick=function(){two=!two;vp.innerHTML=embed(two?m[13]:m[8]);b.textContent=two?"🔄 سێرڤەری یەکەم":L1};
- vp.insertAdjacentElement("afterend",b)}
-document.getElementById("bk").addEventListener("click",function(){var o=document.getElementById("srvB");if(o)o.remove()});
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js?v=2').catch(function(){});});}
+/* ===== server switch + comments ===== */
+var _p4=play;play=function(){_p4();var m=M[cur];$("srv").style.display=(m&&m[8]&&m[13])?"flex":"none"};
+$("dPlay").onclick=play;
+function srvTo(n){var m=M[cur],u=m&&(n==2?m[13]:m[8]);if(!u)return;$("vp").innerHTML=embed(u,0);$("vp").style.display="block";$("pc").style.display=PC.k?"flex":"none"}
+$("s1").onclick=function(){srvTo(1)};$("s2").onclick=function(){srvTo(2)};
+var cmU=null,cmLast=0;
+function cmStop(){if(cmU){cmU();cmU=null}}
+function cmLoad(){cmStop();var m=M[cur],id=m&&m[9];$("cml").innerHTML="";$("cmx").style.display=(db&&id)?"":"none";if(!db||!id)return;
+ cmU=db.collection("comments").where("film","==",id).limit(60).onSnapshot(function(q){
+  var me=fbOk&&firebase.auth().currentUser,ad=me&&me.email&&me.email.toLowerCase()==ADMIN,a=[];q.forEach(function(d){var x=d.data();x.id=d.id;a.push(x)});
+  a.sort(function(p,r){return (r.t||0)-(p.t||0)});
+  $("cml").innerHTML=a.length?a.map(function(x){var own=me&&(ad||x.uid==me.uid);
+   return'<div class="cmi">'+(own?'<button class="mini" data-cd="'+esc(x.id)+'">🗑</button>':"")+'<b>'+esc(x.name||"")+'</b><small>'+new Date(x.t||0).toLocaleDateString()+'</small><p>'+esc(x.text||"")+'</p></div>'}).join(""):'<div class="empty" style="padding:14px">هێشتا کۆمێنت نییە</div>'},
+  function(){$("cml").innerHTML='<div class="empty" style="padding:14px">کۆمێنتەکان نەکرانەوە</div>'})}
+$("cmb").onclick=function(){var u=fbOk&&firebase.auth().currentUser,m=M[cur],id=m&&m[9],t=$("cmt").value.trim();
+ if(!u){alert("بۆ نووسینی کۆمێنت سەرەتا بچۆ ژوورەوە");return}
+ if(!t||!db||!id)return;if(Date.now()-cmLast<8000){alert("کەمێک چاوەڕێ بکە");return}
+ cmLast=Date.now();$("cmb").disabled=true;
+ db.collection("comments").add({film:id,uid:u.uid,name:dn(u.email),text:t.slice(0,300),t:Date.now()})
+ .then(function(){$("cmt").value="";$("cmb").disabled=false}).catch(function(){$("cmb").disabled=false;alert("کۆمێنتەکە نەنێردرا. ڕێساکانی Firestore پشکنە")})};
+$("cml").onclick=function(e){var id=e.target.dataset.cd;if(id&&db&&confirm("ئەم کۆمێنتە بسڕدرێتەوە؟"))db.collection("comments").doc(id).delete().catch(function(){})};
+var _o5=open_;open_=function(i){$("srv").style.display="none";_o5(i);cmLoad()};
+$("bk").addEventListener("click",cmStop);
 </script>
 </body>
 </html>
