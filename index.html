@@ -204,6 +204,16 @@ img,video{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none}
 #lt{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:100001;max-width:86%;padding:13px 18px;border-radius:16px;background:rgba(30,30,40,.95);border:1px solid rgba(255,255,255,.16);color:#fff;font-size:14px;text-align:center;opacity:0;pointer-events:none;transition:.3s}
 #lt.on{opacity:1;transform:translate(-50%,0)}
 html.blurred body>*:not(#gate){filter:blur(28px)}
+/* profile: text left, toggles/chevrons right */
+#prof .r2{direction:ltr;text-align:left}
+#prof .r2 b{text-align:left}
+#prof .sws{direction:ltr;justify-content:flex-start}
+#prof h3{direction:ltr;text-align:left}
+/* splash */
+#spl{position:fixed;inset:0;z-index:99998;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}
+#spl.off{opacity:0;pointer-events:none}
+#spl img{width:min(62vw,280px);height:auto;animation:splp 1.4s ease-in-out infinite}
+@keyframes splp{0%,100%{transform:scale(.96);opacity:.85}50%{transform:scale(1.04);opacity:1}}
 </style>
 </head>
 <body>
@@ -577,7 +587,7 @@ var _rp=renderProf;renderProf=function(){_rp();var p=cp();
 renderProf();render();
 
 /* ===== Firestore films + admin ===== */
-var ADMIN="chawtvapp@gmail.com",SM=M,db=null,remote=[];
+var ADMIN="chawtvapp@gmail.com",SM=[],db=null,remote=[];M=[];ids=[];render();
 function cl(x){return String(x==null?"":x).replace(/[<>&"]/g,"")}
 function ytId(u){var m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:""}
 function embed(u){u=(u||"").trim();var y=ytId(u),g=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/),a=u.match(/archive\.org\/(?:details|embed)\/([^\/?#]+)/),vm=u.match(/vidmoly\.[a-z]+\/(?:embed-|w\/)?([\w-]+)/);
@@ -595,9 +605,9 @@ var _o2=open_;open_=function(i){stopV();_o2(i)};
 $("bk").addEventListener("click",stopV);
 function loadRemote(sn){remote=[];sn.forEach(function(d){var x=d.data();
  remote.push([x.title||"",cl(x.genre),cl(x.year),cl(x.duration),cl(x.rating),cl(x.lang),x.synopsis||"",x.poster||"",x.video||"",d.id,cl(x.type)||"فیلم",cl(x.rt),cl(x.mc),x.video2||""])});
- M=remote.length?remote:SM;ids=M.map(function(_,i){return i});render();drawFL()}
+ M=remote;ids=M.map(function(_,i){return i});render();drawFL();hideSpl()}
 if(fbOk&&firebase.firestore){try{db=firebase.firestore();
- db.collection("films").orderBy("createdAt").onSnapshot(loadRemote,function(){})}catch(e){}}
+ db.collection("films").orderBy("createdAt").onSnapshot(loadRemote,function(){hideSpl()})}catch(e){}}
 $("fG").innerHTML=G.slice(1).map(function(g){return'<option value="'+g+'">'+g+'</option>'}).join("");
 var fImg="",editId="",fLbl="";
 function fSv(o){if(!editId)return db.collection("films").add(o);delete o.createdAt;if(!o.poster)delete o.poster;return db.collection("films").doc(editId).update(o)}
@@ -875,6 +885,12 @@ $("bk").addEventListener("click",cmStop);
   if(vp.firstChild&&fbReady()&&!authed())needLogin();
  }).observe(vp,{childList:true});
 })();
+</script>
+<div id="spl"><img id="splI" alt="چاو تیڤی"></div>
+<script>
+var _spT0=Date.now();
+function hideSpl(){var e=document.getElementById('spl');if(!e||e._h)return;e._h=1;var w=Math.max(0,1100-(Date.now()-_spT0));setTimeout(function(){e.classList.add('off');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},600)},w)}
+(function(){var l=document.querySelector('.top .logo'),i=document.getElementById('splI');if(l&&i)i.src=l.src;setTimeout(hideSpl,5000)})();
 </script>
 </body>
 </html>
