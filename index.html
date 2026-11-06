@@ -16,6 +16,7 @@
 /* ===== INSTALL GATE CONFIG ===== */
 var APK_ANDROID_URL="";   /* لینکی APK ی ئەندرۆید لێرە دابنێ */
 var APK_TV_URL="";        /* لینکی APK ی Smart TV لێرە دابنێ */
+window.__dp=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__dp=e});
 (function(){
  var standalone=(window.navigator.standalone===true)||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||(window.matchMedia&&matchMedia('(display-mode: fullscreen)').matches);
  var bypass=false;try{bypass=localStorage.getItem('chaw_dev')==='1'}catch(e){}
@@ -174,13 +175,13 @@ html.gated body>*:not(#gate){display:none!important}
 html.gated,html.gated body{overflow:hidden;height:100%}
 #gate{display:none}
 html.gated #gate{display:flex}
-#gate{position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 80% 0,#2a1d4d 0,transparent 55%),radial-gradient(circle at 0 100%,#3a1636 0,transparent 50%),#080A12}
+#gate{position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 80% 0,#4a3510 0,transparent 55%),radial-gradient(circle at 0 100%,#3a2308 0,transparent 50%),#0b0906}
 #gate .gc{width:100%;max-width:420px;border-radius:38px;padding:30px 22px 22px;text-align:center;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 30px 80px rgba(0,0,0,.55)}
-#gate .lock{width:86px;height:86px;margin:6px auto 22px;display:block;filter:drop-shadow(0 10px 24px rgba(139,92,246,.45))}
+#gate .lock{width:86px;height:86px;margin:6px auto 22px;display:block;filter:drop-shadow(0 10px 26px rgba(245,184,61,.5))}
 #gate .gt{font-size:19px;line-height:2.1;font-weight:700;color:#fff}
-#gate .gt b{color:#8b5cf6}
-#gate .gt .hl{display:block;color:#8b5cf6;direction:ltr;font-weight:800}
-#gate .gmain{margin-top:22px;width:100%;border:0;border-radius:22px;padding:19px;font:inherit;font-size:18px;font-weight:800;color:#fff;background:linear-gradient(135deg,#8b5cf6,#6d35e0);box-shadow:0 12px 34px rgba(139,92,246,.45)}
+#gate .gt b{color:#F5B83D}
+#gate .gt .hl{display:block;color:#F5B83D;direction:ltr;font-weight:800}
+#gate .gmain{margin-top:22px;width:100%;border:0;border-radius:22px;padding:19px;font:inherit;font-size:18px;font-weight:800;color:#1a1204;background:linear-gradient(135deg,#FFE08A,#F5B83D 45%,#D9980F);box-shadow:0 12px 34px rgba(245,184,61,.45),inset 0 1px 0 rgba(255,255,255,.55)}
 #gate .gor{display:flex;align-items:center;gap:12px;margin:16px 6px;color:#8a90a6;font-size:14px}
 #gate .gor:before,#gate .gor:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.14)}
 #gate .gst{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -193,7 +194,7 @@ html.gated #gate{display:flex}
 #gst.on{display:flex}
 #gst .sh{width:100%;border-radius:28px 28px 0 0;padding:24px 22px calc(28px + env(safe-area-inset-bottom,0px));background:#16182a;border-top:1px solid rgba(255,255,255,.14);color:#fff}
 #gst ol{margin:14px 0 18px;padding-inline-start:22px;line-height:2.3;font-size:16px}
-#gst button{width:100%;border:0;border-radius:16px;padding:14px;font:inherit;font-weight:800;color:#fff;background:#8b5cf6}
+#gst button{width:100%;border:0;border-radius:16px;padding:14px;font:inherit;font-weight:800;color:#1a1204;background:linear-gradient(135deg,#FFE08A,#F5B83D 45%,#D9980F)}
 /* protection: no select / callout / drag (inputs excepted) */
 body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea{-webkit-user-select:text;user-select:text}
@@ -205,13 +206,13 @@ html.blurred body>*:not(#gate){filter:blur(28px)}
 </style>
 </head>
 <body>
-<div id="gate"><div class="gc"><svg class="lock" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9e3ee"/><stop offset="1" stop-color="#8b7f93"/></linearGradient></defs><path d="M30 46V34a20 20 0 0 1 40 0v12" fill="none" stroke="url(#lg1)" stroke-width="9" stroke-linecap="round"/><rect x="18" y="44" width="64" height="48" rx="14" fill="url(#lg1)" stroke="rgba(255,255,255,.5)" stroke-width="2"/><circle cx="50" cy="66" r="7" fill="#f4eef7"/></svg>
+<div id="gate"><div class="gc"><svg class="lock" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0BF"/><stop offset="1" stop-color="#C98F14"/></linearGradient></defs><path d="M30 46V34a20 20 0 0 1 40 0v12" fill="none" stroke="url(#lg1)" stroke-width="9" stroke-linecap="round"/><rect x="18" y="44" width="64" height="48" rx="14" fill="url(#lg1)" stroke="rgba(255,255,255,.5)" stroke-width="2"/><circle cx="50" cy="66" r="7" fill="#FFF8E1"/></svg>
 <div class="gt">بۆ پاراستنی <b>مافی کۆپیرایت</b>،<br>تکایە ئەپەکە دابەزێنە<span class="hl">(Add to Home Screen)</span>بۆ بینینی بەرهەمەکان</div>
 <button class="gmain" id="gInst">⬇︎ داونلۆدی ئەپەکە</button>
 <div class="gor">یان</div>
 <div class="gst">
 <button class="gs" id="gAnd"><i style="background:#2fd573;color:#06210f">🤖</i><div><small>GET IT ON</small><span>Android</span></div></button>
-<button class="gs" id="gTv"><i style="background:#8b5cf6">📺</i><div><small>DOWNLOAD APK</small><span>Smart TV</span></div></button>
+<button class="gs" id="gTv"><i style="background:linear-gradient(135deg,#FFE08A,#E8A820)">📺</i><div><small>DOWNLOAD APK</small><span>Smart TV</span></div></button>
 </div>
 <div class="gnote">ئەگەر ئەپەکەت داونلۆد کردووە، کلیک بکە تا بکریتەوە</div>
 </div></div>
@@ -812,7 +813,7 @@ $("bk").addEventListener("click",cmStop);
 (function(){
  var $=function(i){return document.getElementById(i)};
  /* --- gate buttons --- */
- var dp=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e});
+ var dp=window.__dp||null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;window.__dp=e});
  window.addEventListener('appinstalled',function(){dp=null;$('gst').classList.remove('on');alert('ئەپەکە دابەزی! ئێستا لە شاشەی سەرەکی بیکەرەوە.')});
  var isAnd=/android/i.test(navigator.userAgent);
  function steps(){
@@ -822,14 +823,17 @@ $("bk").addEventListener("click",cmStop);
   }
   $('gst').classList.add('on');
  }
+ var inApp=/FBAN|FBAV|Instagram|Telegram|Snapchat|TikTok|Line\/|; wv\)/i.test(navigator.userAgent);
  function installApp(){
   if(dp){dp.prompt();if(dp.userChoice)dp.userChoice.then(function(){dp=null});return}
+  if(isAnd&&inApp){var u=location.href.replace(/^https?:\/\//,'');location.href='intent://'+u+'#Intent;scheme=https;package=com.android.chrome;end';setTimeout(steps,1200);return}
   steps();
  }
+ function dlApk(u){var a=document.createElement('a');a.href=u;a.setAttribute('download','ChawTV.apk');document.body.appendChild(a);a.click();a.remove()}
  $('gInst').onclick=installApp;
  $('gstX').onclick=function(){$('gst').classList.remove('on')};
  function link(u){if(u){location.href=u}else{alert('بەم زووانە بەردەست دەبێت')}}
- $('gAnd').onclick=function(){if(APK_ANDROID_URL){location.href=APK_ANDROID_URL}else{installApp()}};
+ $('gAnd').onclick=function(){if(APK_ANDROID_URL){dlApk(APK_ANDROID_URL)}else{installApp()}};
  $('gTv').onclick=function(){link(APK_TV_URL)};
  /* hidden owner bypass: tap the lock 7 times */
  var n=0,tm;document.querySelector('#gate .lock').addEventListener('click',function(){n++;clearTimeout(tm);tm=setTimeout(function(){n=0},2500);if(n>=7){try{localStorage.setItem('chaw_dev','1')}catch(e){}location.reload()}});
